@@ -1,0 +1,30 @@
+{{!-- no data --}}
+<div class="main -md-content instance-wallpaper">
+  <img class="limit-width" src="/wallpaperplaceholder.png"></img>
+  <div class="-md-content">
+    <mdui-card class="card-default">
+      <div class="content">
+        <div class="content-row header flex-center"><mdui-icon name='info--two-tone'></mdui-icon><span>壁纸信息</span></div>
+        <span class="desc" id="instance-wallpaper-image-src">图像来源：占位符</span>
+        <span class="desc" id="instance-wallpaper-image-upd">更新时间：1970-1-1</span>
+      </div>
+    </mdui-card>
+    <mdui-card class="card-default">
+      <div class="content">
+        <div class="content-row flex-center header"><mdui-icon name="image--two-tone"></mdui-icon><span>每日壁纸</span>
+          <mdui-checkbox class="desc" id="instance-wallpaper-daily-checkbox" checked>启用每日壁纸</mdui-checkbox>
+        </div>
+        <div class="desc">选择壁纸来源</div>
+        <mdui-select id="instance-wallpaper-source-selector" value="Spotlight">
+          <mdui-menu-item value="Spotlight">Windows 聚焦</mdui-menu-item>
+          <mdui-menu-item value="Bing">Bing</mdui-menu-item>
+          <mdui-menu-item value="Custom">自定义</mdui-menu-item>
+        </mdui-select>
+        <div class="desc">自定义</div>
+        <mdui-button variant="elevated" id="instance-wallpaper-choose-file" icon="upload_file">从本地上传文件</mdui-button>
+
+      </div>
+    </mdui-card>
+  </div>
+
+</div>

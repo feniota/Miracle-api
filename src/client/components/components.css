@@ -1,0 +1,70 @@
+.instance-card {
+  min-width: 300px;
+
+  .instance-name {
+    display: flex;
+
+    .instance-name-text {
+      margin-left: 5px;
+    }
+  }
+
+  .instance-id {
+    color: rgb(var(--mdui-color-secondary));
+    font-size: var(--mdui-typescale-body-small-size);
+  }
+}
+
+.instance-panel-card {
+  :is(mdui-icon) {
+    color: rgb(var(--mdui-color-primary)) !important;
+  }
+}
+
+.instance-wallpaper.-md-content {
+  flex-wrap: wrap;
+  align-items: start;
+  align-content: start;
+}
+
+.instance-wallpaper {
+  padding-left: 10px;
+
+  /* 这是放两张卡片的容器 */
+  .-md-content {
+    padding-top: 15px
+  }
+
+  .card-default {
+    min-width: 400px;
+  }
+
+  .margin-top-20 {
+    margin-top: 20px;
+  }
+
+  #source-select-desc {
+    min-width: 6em;
+  }
+
+  .limit-width {
+    max-width: 400px;
+  }
+
+  :is(mdui-icon) {
+    margin-right: 5px;
+  }
+
+  :is(img) {
+    border-radius: 10px;
+    transition-property: box-shadow, transform;
+    transition-duration: var(--mdui-motion-duration-medium1);
+    transition-timing-function: var(--mdui-motion-easing-standard);
+    box-shadow: var(--mdui-elevation-level2);
+  }
+
+  :is(img):hover {
+    transform: scale(1.05);
+    box-shadow: var(--mdui-elevation-level4);
+  }
+}

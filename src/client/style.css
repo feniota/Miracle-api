@@ -1,0 +1,93 @@
+/* MAIN LAYOUT */
+
+#appbar {
+  position: fixed !important;
+}
+
+#navigation-drawer-list {
+  margin-right: 1rem;
+}
+
+#placeholder-auth {
+  text-align: center;
+  color: rgb(var(--mdui-color-secondary));
+  font-size: 4dvh;
+  padding-top: 10dvh;
+}
+
+#placeholder-auth mdui-icon {
+  font-size: 5rem !important;
+  margin-bottom: 4dvh;
+}
+
+.main {
+  min-height: 100dvh;
+}
+
+:is(.content, .content-no-flex, .-sm-content)>* {
+  margin-bottom: 10px;
+}
+
+.content,
+.-sm-content {
+  display: flex;
+  flex-direction: column;
+}
+
+:is(.content-row, .-md-content)>* {
+  margin-right: 10px;
+
+}
+
+.content-row,
+.-md-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.hidden {
+  display: none;
+}
+
+.error {
+  color: rgb(var(--mdui-color-error));
+}
+
+.card-default .content {
+  margin: 20px;
+}
+
+.header {
+  font-size: var(--mdui-typescale-headline-small-size);
+  font-weight: var(--mdui-typescale-headline-small-weight);
+}
+
+.desc {
+  color: rgb(var(--mdui-color-secondary));
+}
+
+.flex-center {
+  align-items: center;
+}
+
+:is(mdui-dialog)::part(panel) {
+  transition-duration: 0.5s;
+  transition-property: width, height;
+  transition-timing-function: ease-in-out;
+}
+
+:is(mdui-dialog).-md-dialog-manual-width::part(panel) {
+  width: 35rem;
+}
+
+:is(mdui-dialog).-sm-dialog-manual-width::part(panel) {
+  width: 80dvw;
+}
