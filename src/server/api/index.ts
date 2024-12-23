@@ -1,26 +1,27 @@
 import { Router } from "express";
 import { MiracleData } from "../misc/data-management";
+import { MiracleAuth } from "../misc/auth";
+import web_tokens from "./web-tokens";
 
 class MiracleApi {
-  private data: MiracleData;
+  private _data: MiracleData;
   private app: Router;
+  private _auth: MiracleAuth;
+
+  data = () => this._data;
+  auth = () => this._auth;
 
   get_router(): Router {
     return this.app;
   }
   constructor(data: MiracleData) {
-    this.data = data;
-    this.app = Router();
+    let router = Router();
+    this._data = data;
+    this._auth = new MiracleAuth();
 
-    this.app.post("/web/auth/instance", (req, res) => {
-      console.log(req.body);
-      res.json({ success: true, token: "1234567890", expires: 1234567890 });
-    });
+    web_tokens(router, this.data, this.auth);
 
-    this.app.post("/web/auth/master", (req, res) => {
-      console.log(req.body);
-      res.json({ success: false });
-    });
+    this.app = router;
   }
 }
 

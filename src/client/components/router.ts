@@ -10,6 +10,8 @@ import instance_op_navbar_listener from "./script/instance-navbar";
 import Log from "../lib/log";
 import Handlebars from "handlebars";
 import "./components.css";
+import { get_instances } from "../api/instance";
+import { snackbar } from "mdui";
 
 let _html_precompiled: any = {};
 // this tag function provides inline handlebars processing
@@ -76,9 +78,19 @@ export const router = () => {
         ><mdui-list-item id="list-item-master" icon="settings--two-tone" rounded
           >服务器设置</mdui-list-item
         >`;
-      main.innerHTML = instance_view({
-        instances: [{ name: "name", id: "1234567890" }],
-      });
+      main.innerHTML = html`<mdui-circular-progress></mdui-circular-progress>`;
+      try {
+        get_instances().then((instances) => {
+          if (instances.length != 0)
+            main.innerHTML = instance_view({ instances });
+          else {
+            main.innerHTML = "没有可用实例。";
+          }
+        });
+      } catch (e) {
+        log.error(e);
+        snackbar({ message: "内部错误：获取实例列表失败" });
+      }
       instance_view_listener();
       break;
     case "/master/settings/":

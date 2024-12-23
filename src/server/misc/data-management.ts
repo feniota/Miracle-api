@@ -37,19 +37,22 @@ const MiracleDataType = Record({
 
 export type MiracleDataType = Static<typeof MiracleDataType>;
 
+function hash(obj: any): string {
+  return createHash("sha256").update(obj).digest("hex");
+}
+
 export class MiracleData {
   private data_directory: string;
   private config_filename: string;
   private _data: MiracleDataType;
-  private hash = createHash("sha256");
 
-  async write() {
+  write = async () => {
     return writeFile(
       path.join(this.data_directory, this.config_filename),
       JSON.stringify(this._data),
       "utf-8"
     );
-  }
+  };
 
   static async init_from_file(file_path: string) {
     let dataraw, dataobj;
@@ -113,34 +116,34 @@ export class MiracleData {
     );
   }
 
-  make_master_key() {
+  make_master_key = () => {
     let rawkey = randomBytes(32).toString("base64url");
-    this._data.common.master_key = this.hash.update(rawkey).digest("hex");
+    this._data.common.master_key = hash(rawkey);
     console.log(
       "New master key generated:\n\n" +
         rawkey +
         "\n\nWARNING: This only shows up once, so make sure to copy it somewhere safe!"
     );
-  }
+  };
 
-  check_master_key(key: string) {
-    return this._data.common.master_key === this.hash.update(key).digest("hex");
-  }
+  check_master_key = (key: string) => {
+    return this._data.common.master_key === hash(key);
+  };
 
-  check_instance_key(instance_name: string, key: string): boolean {
+  check_instance_key = (instance_name: string, key: string): boolean => {
     let result = false;
     this._data.common.instances.forEach((element) => {
       if (element.name === instance_name) {
-        result = element.api_key === this.hash.update(key).digest("hex");
+        result = element.api_key === hash(key);
       }
     });
     return result;
-  }
+  };
 
-  new_instance(name: string, id: string) {
+  new_instance = (name: string, id: string) => {
     let key = randomBytes(32).toString("base64url");
     this._data.common.instances.push({
-      api_key: this.hash.update(key).digest("hex"),
+      api_key: hash(key),
       name: name,
       id: id,
       config: {
@@ -150,7 +153,12 @@ export class MiracleData {
         cee_date: "",
       },
     });
-  }
+    return key;
+  };
+
+  get_instances = () => {
+    return this._data.common.instances;
+  };
 
   constructor(data: MiracleDataType, dir: string, config_filename: string) {
     this.data_directory = dir;

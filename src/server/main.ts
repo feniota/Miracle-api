@@ -22,8 +22,8 @@ import path from "node:path";
       return await MiracleData.init_from_file(config_file);
     } else {
       let data = MiracleData.new_dataset(config_file);
-      await data.write();
       data.make_master_key();
+      await data.write();
       return data;
     }
   })();
@@ -32,7 +32,7 @@ import path from "node:path";
 
   app.use(express.json());
 
-  app.use("/api/v1", new api_router(_data).get_router);
+  app.use("/api/v1", new api_router(_data).get_router());
 
   ViteExpress.listen(app, port, () =>
     console.log("Server is listening on http://localhost:" + port)

@@ -31,9 +31,9 @@
   padding-left: 10px;
 
   /* 这是放两张卡片的容器 */
-  .-md-content {
+  /* .-md-content {
     padding-top: 15px
-  }
+  } */
 
   .card-default {
     min-width: 400px;
@@ -56,6 +56,7 @@
   }
 
   :is(img) {
+    margin-bottom: 15px;
     border-radius: 10px;
     transition-property: box-shadow, transform;
     transition-duration: var(--mdui-motion-duration-medium1);

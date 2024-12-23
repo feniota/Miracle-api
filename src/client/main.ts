@@ -3,14 +3,13 @@ import "mdui/mdui.css";
 import "mdui";
 import { breakpoint, Checkbox, NavigationDrawer, observeResize } from "mdui";
 import { observeBreakpoint } from "./lib/breakpoint";
-import "./api/index";
+import "./api/auth";
 import "./lib/globalvar";
 import { back } from "./components/router";
 
+let drawer = document.getElementById("navigation-drawer")! as NavigationDrawer;
+
 {
-  let drawer = document.getElementById(
-    "navigation-drawer"
-  )! as NavigationDrawer;
   let button = document.getElementById("navigation-drawer-button")!;
 
   button.addEventListener("click", () => {
@@ -48,12 +47,12 @@ import { back } from "./components/router";
 }
 
 {
-  
-}
-
-{
-  observeResize(document.body, () => {
+  let resize_functions = () => {
+    breakpoint().up("md") ? (drawer.open = true) : (drawer.open = false);
     observeBreakpoint("dialog-manual-width");
     observeBreakpoint("content");
-  });
+  };
+  observeResize(document.body, resize_functions);
+  // 确保在加载完页面后执行一次
+  resize_functions();
 }

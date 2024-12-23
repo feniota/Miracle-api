@@ -1,65 +1,59 @@
-import { Number, String, Record, Static } from "runtypes";
+import { Number, String, Record, Static, Union, Literal } from "runtypes";
 import crypto from "node:crypto";
 
-const MiracleAuthInstanceTokenType = Record({
+const MiracleAuthTokenType = Record({
+  type: Union(Literal("master"), Literal("instance")),
   instance_id: String,
   token: String,
   expires: Number,
 });
 
-const MiracleAuthMasterTokenType = Record({
-  token: String,
-  expires: Number,
-});
-
-export type MiracleAuthMasterTokenType = Static<
-  typeof MiracleAuthMasterTokenType
->;
-export type MiracleAuthInstanceTokenType = Static<
-  typeof MiracleAuthInstanceTokenType
->;
+export type MiracleAuthTokenType = Static<typeof MiracleAuthTokenType>;
 
 export class MiracleAuth {
-  tokens: Map<string, MiracleAuthInstanceTokenType>;
-  master_token: MiracleAuthMasterTokenType;
-  new_token(instance_name: string): MiracleAuthInstanceTokenType {
+  tokens: Map<string, MiracleAuthTokenType>;
+  new_token(instance_id: string): MiracleAuthTokenType {
     let token = {
-      instance_id: instance_name,
+      type: "instance",
+      instance_id,
       token: crypto.randomBytes(32).toString("base64url"),
       expires: Date.now() + 1000 * 60 * 10,
-    };
-    this.tokens.set(instance_name, token);
+    } as MiracleAuthTokenType;
+    this.tokens.set(token.token, token);
     return token;
   }
 
-  new_master_token(): MiracleAuthMasterTokenType {
+  new_master_token(): MiracleAuthTokenType {
     let token = {
-      token: "",
+      type: "master",
+      instance_id: "",
+      token: crypto.randomBytes(32).toString("base64url"),
       expires: Date.now() + 1000 * 60 * 10,
-    };
-    this.master_token = token;
+    } as MiracleAuthTokenType;
+    this.tokens.set(token.token, token);
     return token;
   }
 
-  validate_token(instance_name: string, token: string): boolean {
-    let instance_token = this.tokens.get(instance_name);
-    if (instance_token) {
-      if (instance_token.token === token) {
-        if (instance_token.expires > Date.now()) return true;
-        else return false;
+  check_token = (
+    token: string
+  ): { valid: boolean; type?: string; instance_id?: string } => {
+    let token_obj = this.tokens.get(token);
+    if (token_obj) {
+      if (Date.now() >= token_obj.expires) {
+        return { valid: false };
       } else {
-        return false;
+        return {
+          valid: true,
+          type: token_obj.type,
+          instance_id: token_obj.instance_id,
+        };
       }
     } else {
-      return false;
+      return { valid: false };
     }
-  }
+  };
 
   constructor() {
     this.tokens = new Map();
-    this.master_token = {
-      token: "",
-      expires: 0,
-    };
   }
 }
