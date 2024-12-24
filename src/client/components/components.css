@@ -69,3 +69,12 @@
     box-shadow: var(--mdui-elevation-level4);
   }
 }
+
+.main:has(#empty-placeholder) {
+  text-align: center;
+
+  #empty-placeholder {
+    margin-top: 30vh;
+    color: rgb(var(--mdui-color-secondary));
+  }
+}

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { MiracleAuth } from "../misc/auth";
 import { MiracleData } from "../misc/data-management";
-import { ReqNewInstance, ResError } from "./types";
+import { ReqNewInstance, ResError, ResInstance } from "./types";
 
 const instances = (
   app: Router,
@@ -26,8 +26,15 @@ const instances = (
   });
 
   app.get("/web/instances/get", (req, res) => {
-    let instances = data().get_instances();
-    res.json(instances);
+    let instances = data()
+      .get_instances()
+      .map((value) => {
+        return {
+          name: value.name,
+          id: value.id,
+        };
+      });
+    res.json(instances as ResInstance[]);
   });
 };
 

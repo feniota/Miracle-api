@@ -4,9 +4,11 @@ import _instance_wallpaper from "./template/instance-wallpaper.handlebars?raw";
 import _instance_slogan from "./template/instance-slogan.handlebars?raw";
 import _instance_config from "./template/instance-config.handlebars?raw";
 import _master_settings from "./template/master-settings.handlebars?raw";
+import _master_new_instance from "./template/master-new-instance.handlebars?raw";
 import instance_view_listener from "./script/instance-view";
 import instance_panel_listener from "./script/instance-panel";
 import instance_op_navbar_listener from "./script/instance-navbar";
+import master_settings_listener from "./script/master-settings";
 import Log from "../lib/log";
 import Handlebars from "handlebars";
 import "./components.css";
@@ -38,6 +40,7 @@ const instance_wallpaper = Handlebars.compile(_instance_wallpaper);
 const instance_slogan = Handlebars.compile(_instance_slogan);
 const instance_config = Handlebars.compile(_instance_config);
 const master_settings = Handlebars.compile(_master_settings);
+const master_new_instance = Handlebars.compile(_master_new_instance);
 
 const log = new Log("router");
 
@@ -78,24 +81,35 @@ export const router = () => {
         ><mdui-list-item id="list-item-master" icon="settings--two-tone" rounded
           >服务器设置</mdui-list-item
         >`;
-      main.innerHTML = html`<mdui-circular-progress></mdui-circular-progress>`;
-      try {
-        get_instances().then((instances) => {
+      main.innerHTML = html`<div class="main">
+        <mdui-circular-progress id="empty-placeholder"></mdui-circular-progress>
+      </div>`;
+      get_instances()
+        .then((instances) => {
           if (instances.length != 0)
             main.innerHTML = instance_view({ instances });
           else {
-            main.innerHTML = "没有可用实例。";
+            log.log("empty");
+            main.innerHTML = html`<div class="main">
+                <div id="empty-placeholder">{{text}}</div>
+              </div>
+              ${{ text: "什么都木有 ＞﹏＜" }}`;
           }
+        })
+        .catch((e) => {
+          log.error(e);
+          snackbar({ message: "获取实例列表失败" });
         });
-      } catch (e) {
-        log.error(e);
-        snackbar({ message: "内部错误：获取实例列表失败" });
-      }
       instance_view_listener();
       break;
-    case "/master/settings/":
+    case "/master/":
       title.innerHTML = "服务器设置";
       main.innerHTML = master_settings({});
+      master_settings_listener();
+      break;
+    case "/master/new-instance/":
+      title.innerHTML = "新建实例";
+      main.innerHTML = master_new_instance({});
       break;
     case "/instance/":
       drawerlist.innerHTML = html`{{#each instances}}

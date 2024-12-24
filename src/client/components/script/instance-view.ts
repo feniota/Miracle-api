@@ -16,7 +16,7 @@ const initlistener = () => {
   list_item_master.addEventListener("click", () => {
     list_item_instance.active = false;
     list_item_master.active = true;
-    route("/master/settings/");
+    route("/master/");
   });
   let instance_card = document.getElementsByClassName("instance-card");
   if (instance_card) {

@@ -30,3 +30,9 @@ export const ResError = Record({
   msg: String,
 });
 export type ResError = Static<typeof ResError>;
+
+export const ResInstance = Record({
+  id: String,
+  name: String,
+});
+export type ResInstance = Static<typeof ResInstance>;
