@@ -34,11 +34,16 @@ const errHandler = (
   document.getElementById("auth-dialog-desc-norm")!.classList.add("hidden");
   return;
 };
-const successHandler = (token: string, expires: number): void => {
+const successHandler = (
+  type: "instance" | "master",
+  token: string,
+  expires: number
+): void => {
   if (!(typeof token === "string" && typeof expires === "number")) {
     errHandler("wrongtype");
     return;
   }
+  window.miracle.api.type = type;
   window.miracle.api.token = token;
   window.miracle.api.expires = expires;
   dialog.open = false;
@@ -71,7 +76,7 @@ const unsetbtnloading = () => {
           if (!res.data.success) {
             errHandler("key-master");
           } else {
-            successHandler(res.data.token, res.data.expires);
+            successHandler("master", res.data.token, res.data.expires);
           }
         })
         .catch((_e) => (e = _e));
@@ -85,7 +90,7 @@ const unsetbtnloading = () => {
           if (!res.data.success) {
             errHandler("key-instance");
           } else {
-            successHandler(res.data.token, res.data.expires);
+            successHandler("instance", res.data.token, res.data.expires);
           }
         })
         .catch((_e) => (e = _e));
@@ -125,7 +130,7 @@ btn.addEventListener("click", async () => {
       );
     }
     if (res.data.success) {
-      successHandler(res.data.token, res.data.expires);
+      successHandler("master", res.data.token, res.data.expires);
     } else {
       errHandler("key-master");
     }
@@ -151,7 +156,7 @@ btn.addEventListener("click", async () => {
       );
     }
     if (res.data.success) {
-      successHandler(res.data.token, res.data.expires);
+      successHandler("instance", res.data.token, res.data.expires);
     } else {
       errHandler("key-instance");
     }

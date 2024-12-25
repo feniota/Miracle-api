@@ -9,6 +9,7 @@ import instance_view_listener from "./script/instance-view";
 import instance_panel_listener from "./script/instance-panel";
 import instance_op_navbar_listener from "./script/instance-navbar";
 import master_settings_listener from "./script/master-settings";
+import master_new_instance_listener from "./script/master-new-instance";
 import Log from "../lib/log";
 import Handlebars from "handlebars";
 import "./components.css";
@@ -22,15 +23,25 @@ let _html_precompiled: any = {};
 function html(strings: TemplateStringsArray, ...values: any[]) {
   if (!strings) return "";
   if (!values) return strings.join("");
-  let input = strings.reduce((acc, str, i) => {
+  if (strings[strings.length - 1] == "") {
+    // 这意味着模板的末尾有变量，因此把传入的字符当 Handlebars 模板
+    let input = strings.reduce((acc, str, i) => {
+      acc += str;
+      if (i < values.length - 1) {
+        acc += values[i];
+      }
+      return acc;
+    }, "");
+    _html_precompiled[input] = Handlebars.compile(input);
+    return _html_precompiled[input](values[values.length - 1]);
+  }
+  return strings.reduce((acc, str, i) => {
     acc += str;
-    if (i < values.length - 1) {
+    if (i < values.length) {
       acc += values[i];
     }
     return acc;
-  });
-  _html_precompiled[input] = Handlebars.compile(input);
-  return _html_precompiled[input](values[values.length - 1]);
+  }, "");
 }
 
 // compile all handlebars templates
@@ -91,9 +102,8 @@ export const router = () => {
           else {
             log.log("empty");
             main.innerHTML = html`<div class="main">
-                <div id="empty-placeholder">{{text}}</div>
-              </div>
-              ${{ text: "什么都木有 ＞﹏＜" }}`;
+              <div id="empty-placeholder">${"什么都木有 ＞﹏＜"}</div>
+            </div>`;
           }
         })
         .catch((e) => {
@@ -110,6 +120,7 @@ export const router = () => {
     case "/master/new-instance/":
       title.innerHTML = "新建实例";
       main.innerHTML = master_new_instance({});
+      master_new_instance_listener();
       break;
     case "/instance/":
       drawerlist.innerHTML = html`{{#each instances}}

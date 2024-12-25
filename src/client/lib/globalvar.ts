@@ -6,6 +6,7 @@ export type MiracleGlobalVar = {
     instances: { name: string; id: string }[];
   };
   api: {
+    type: "instance" | "master";
     token: string;
     expires: number;
   };
@@ -19,5 +20,5 @@ declare global {
 
 window.miracle = {
   interaction: { path: "/", current: "", current_name: "", instances: [] },
-  api: { token: "", expires: 0 },
+  api: { type: "instance", token: "", expires: 0 },
 };
