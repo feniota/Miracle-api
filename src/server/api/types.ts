@@ -36,3 +36,9 @@ export const ResInstance = Record({
   name: String,
 });
 export type ResInstance = Static<typeof ResInstance>;
+
+export const ResNewInstance = Record({
+  success: Boolean,
+  key: String,
+});
+export type ResNewInstance = Static<typeof ResNewInstance>;

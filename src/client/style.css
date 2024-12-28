@@ -74,8 +74,16 @@
   color: rgb(var(--mdui-color-secondary));
 }
 
+.err {
+  color: rgb(var(--mdui-color-error));
+}
+
 .flex-center {
   align-items: center;
+}
+
+.text-field-monospace::part(input) {
+  font-family: 'Monaco', 'Cascadia Mono', 'Courier New', Courier, monospace;
 }
 
 :is(mdui-dialog)::part(panel) {

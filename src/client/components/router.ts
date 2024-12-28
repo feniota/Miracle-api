@@ -15,34 +15,7 @@ import Handlebars from "handlebars";
 import "./components.css";
 import { get_instances } from "../api/instance";
 import { snackbar } from "mdui";
-
-let _html_precompiled: any = {};
-// this tag function provides inline handlebars processing
-// usage: html`<some>{{ handlebars_var }}</some>${data}`
-// will become `<some>{{ handlesbars_var }}</some>` to handlebars renderer with data
-function html(strings: TemplateStringsArray, ...values: any[]) {
-  if (!strings) return "";
-  if (!values) return strings.join("");
-  if (strings[strings.length - 1] == "") {
-    // 这意味着模板的末尾有变量，因此把传入的字符当 Handlebars 模板
-    let input = strings.reduce((acc, str, i) => {
-      acc += str;
-      if (i < values.length - 1) {
-        acc += values[i];
-      }
-      return acc;
-    }, "");
-    _html_precompiled[input] = Handlebars.compile(input);
-    return _html_precompiled[input](values[values.length - 1]);
-  }
-  return strings.reduce((acc, str, i) => {
-    acc += str;
-    if (i < values.length) {
-      acc += values[i];
-    }
-    return acc;
-  }, "");
-}
+import { html } from "../lib/html";
 
 // compile all handlebars templates
 const instance_view = Handlebars.compile(_instance_view);
@@ -97,10 +70,12 @@ export const router = () => {
       </div>`;
       get_instances()
         .then((instances) => {
-          if (instances.length != 0)
+          if (instances.length != 0) {
+            window.miracle.interaction.instances = instances;
             main.innerHTML = instance_view({ instances });
-          else {
-            log.log("empty");
+            instance_view_listener(true);
+          } else {
+            window.miracle.interaction.instances = [];
             main.innerHTML = html`<div class="main">
               <div id="empty-placeholder">${"什么都木有 ＞﹏＜"}</div>
             </div>`;
@@ -125,36 +100,32 @@ export const router = () => {
     case "/instance/":
       drawerlist.innerHTML = html`{{#each instances}}
         <mdui-list-item
+          class="instance-list-item"
           icon="dns--two-tone"
           rounded
           miracle-instance-id="{{id}}"
+          miracle-instance-name="{{name}}"
           >{{name}}</mdui-list-item
         >
-        {{/each}}
-        ${{
-          instances: [
-            { name: "name", id: "1234567890" },
-            { name: "name2", id: "1234567891" },
-          ],
-        }}`;
+        {{/each}} ${{ instances: window.miracle.interaction.instances }}`;
       main.innerHTML = instance_panel({});
-      title.innerHTML = "name";
+      title.innerHTML = window.miracle.interaction.current_name;
       instance_panel_listener();
       break;
     case "/instance/wallpaper/":
-      title.innerHTML = "name" + " - 壁纸编辑";
+      title.innerHTML = window.miracle.interaction.current_name + " - 壁纸编辑";
       main.innerHTML = instance_wallpaper({});
       drawerlist.innerHTML = drawlist_instance_operations;
       instance_op_navbar_listener();
       break;
     case "/instance/slogan/":
-      title.innerHTML = "name" + " - 标语编辑";
+      title.innerHTML = window.miracle.interaction.current_name + " - 标语编辑";
       main.innerHTML = instance_slogan({});
       drawerlist.innerHTML = drawlist_instance_operations;
       instance_op_navbar_listener();
       break;
     case "/instance/config/":
-      title.innerHTML = "name" + " - 配置文件";
+      title.innerHTML = window.miracle.interaction.current_name + " - 配置文件";
       main.innerHTML = instance_config({});
       drawerlist.innerHTML = drawlist_instance_operations;
       instance_op_navbar_listener();
@@ -166,6 +137,7 @@ export const router = () => {
 };
 
 export const route = (path: string) => {
+  window.location.hash = path; // 实际没有用但看着好看一些
   window.miracle.interaction.path = path;
   router();
 };

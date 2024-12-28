@@ -140,7 +140,16 @@ export class MiracleData {
     return result;
   };
 
-  new_instance = (name: string, id: string) => {
+  new_instance = (name: string, id: string): string => {
+    let exist = false;
+    this._data.common.instances.forEach((element) => {
+      if (element.id === id) {
+        exist = true;
+      }
+    });
+    if (exist) {
+      return "";
+    }
     let key = randomBytes(32).toString("base64url");
     this._data.common.instances.push({
       api_key: hash(key),

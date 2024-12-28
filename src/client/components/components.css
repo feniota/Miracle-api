@@ -1,14 +1,6 @@
 .instance-card {
   min-width: 300px;
 
-  .instance-name {
-    display: flex;
-
-    .instance-name-text {
-      margin-left: 5px;
-    }
-  }
-
   .instance-id {
     color: rgb(var(--mdui-color-secondary));
     font-size: var(--mdui-typescale-body-small-size);

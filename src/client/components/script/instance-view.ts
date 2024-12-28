@@ -1,7 +1,22 @@
 import { ListItem } from "mdui";
 import { route } from "../router";
 
-const initlistener = () => {
+const initlistener = (cardonly?: boolean) => {
+  let instance_card = document.getElementsByClassName("instance-card");
+  if (instance_card) {
+    Array.from(instance_card).forEach((element) => {
+      element.addEventListener("click", () => {
+        window.miracle.interaction.current = element.getAttribute(
+          "miracle-instance-id"
+        )!;
+        window.miracle.interaction.current_name = element.getAttribute(
+          "miracle-instance-name"
+        )!;
+        route("/instance/");
+      });
+    });
+  }
+  if (cardonly) return;
   let list_item_master = document.getElementById(
     "list-item-master"
   ) as ListItem;
@@ -18,16 +33,5 @@ const initlistener = () => {
     list_item_master.active = true;
     route("/master/");
   });
-  let instance_card = document.getElementsByClassName("instance-card");
-  if (instance_card) {
-    Array.from(instance_card).forEach((element) => {
-      element.addEventListener("click", () => {
-        window.miracle.interaction.current = element.getAttribute(
-          "miracle-instance-id"
-        )!;
-        route("/instance/");
-      });
-    });
-  }
 };
 export default initlistener;

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { MiracleAuth } from "../misc/auth";
 import { MiracleData } from "../misc/data-management";
-import { ReqNewInstance, ResError, ResInstance } from "./types";
+import { ReqNewInstance, ResError, ResInstance, ResNewInstance } from "./types";
 
 const instances = (
   app: Router,
@@ -13,9 +13,16 @@ const instances = (
       let body = ReqNewInstance.check(req.body);
       let checktoken = auth().check_token(body.token);
       if (checktoken.valid && checktoken.type === "master") {
-        data().new_instance(body.name, body.id);
-        data().write();
-        res.json({ success: true });
+        let key = data().new_instance(body.name, body.id);
+        if (!key) {
+          res.json({
+            success: false,
+            msg: "Instance already exists",
+          } as ResError);
+        } else {
+          data().write();
+          res.json({ success: true, key } as ResNewInstance);
+        }
       } else {
         res.json({ success: false, msg: "Invalid key" } as ResError);
       }
