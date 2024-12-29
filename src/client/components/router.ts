@@ -56,7 +56,8 @@ const drawlist_instance_operations = html`<mdui-list-item
   >
     配置文件
   </mdui-list-item>`;
-export const router = async (back?: boolean): Promise<void> => {
+
+const router = async (back?: boolean): Promise<void> => {
   const path = window.miracle.interaction.path;
   const main = document.getElementById("main")!;
   const drawerlist = document.getElementById("navigation-drawer-list")!;
@@ -77,22 +78,29 @@ export const router = async (back?: boolean): Promise<void> => {
   switch (path) {
     case "/":
       title.innerHTML = "Feniota Miracle 控制台";
-      await list_item_out(drawerlist);
-      drawerlist.innerHTML = html`<mdui-list-item
-          id="list-item-instance"
-          icon="dns--two-tone"
-          rounded
-          style="opacity:0"
-          active
-          >实例列表</mdui-list-item
-        ><mdui-list-item
-          id="list-item-master"
-          icon="settings--two-tone"
-          rounded
-          style="opacity:0"
-          >服务器设置</mdui-list-item
-        >`;
-      list_item_in(drawerlist);
+      if (
+        !(
+          window.miracle.interaction.path_from.startsWith("/master/") ||
+          window.miracle.interaction.path_from === "/"
+        )
+      ) {
+        await list_item_out(drawerlist);
+        drawerlist.innerHTML = html`<mdui-list-item
+            id="list-item-instance"
+            icon="dns--two-tone"
+            rounded
+            style="opacity:0"
+            active
+            >实例列表</mdui-list-item
+          ><mdui-list-item
+            id="list-item-master"
+            icon="settings--two-tone"
+            rounded
+            style="opacity:0"
+            >服务器设置</mdui-list-item
+          >`;
+        list_item_in(drawerlist);
+      }
       main.innerHTML = html`<div class="main">
         <mdui-circular-progress id="empty-placeholder"></mdui-circular-progress>
       </div>`;
@@ -126,25 +134,27 @@ export const router = async (back?: boolean): Promise<void> => {
       master_new_instance_listener();
       break;
     case "/instance/":
-      await list_item_out(drawerlist);
-      drawerlist.innerHTML = html`{{#each instances}}
-        <mdui-list-item
-          class="instance-list-item"
-          icon="dns--two-tone"
-          rounded
-          miracle-instance-id="{{id}}"
-          miracle-instance-name="{{name}}"
-          style="opacity:0"
-          >{{name}}</mdui-list-item
-        >
-        {{/each}}
-        ${{
-          instances: window.miracle.interaction.instances,
-          current_id: window.miracle.interaction.current,
-        }}`;
-      list_item_in(drawerlist);
       main.innerHTML = instance_panel({});
       title.innerHTML = window.miracle.interaction.current_name;
+      if (window.miracle.interaction.path_from !== "/instance/") {
+        await list_item_out(drawerlist);
+        drawerlist.innerHTML = html`{{#each instances}}
+          <mdui-list-item
+            class="instance-list-item"
+            icon="dns--two-tone"
+            rounded
+            miracle-instance-id="{{id}}"
+            miracle-instance-name="{{name}}"
+            style="opacity:0"
+            >{{name}}</mdui-list-item
+          >
+          {{/each}}
+          ${{
+            instances: window.miracle.interaction.instances,
+            current_id: window.miracle.interaction.current,
+          }}`;
+        list_item_in(drawerlist);
+      }
       instance_panel_listener();
       break;
     case "/instance/wallpaper/":
@@ -170,7 +180,6 @@ export const router = async (back?: boolean): Promise<void> => {
     case "/instance/config/":
       title.innerHTML = window.miracle.interaction.current_name + " - 配置文件";
       main.innerHTML = instance_config({});
-      console.log(window.miracle.interaction.path_from);
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
         console.log("animate");
         await list_item_out(drawerlist);
@@ -188,18 +197,16 @@ export const router = async (back?: boolean): Promise<void> => {
   return;
 };
 
-export const route = (path: string) => {
+export const route = (path: string, back?: boolean) => {
   window.miracle.interaction.path_from = window.miracle.interaction.path;
-  window.location.hash = path; // 实际没有用但看着好看一些
   window.miracle.interaction.path = path;
-  return router();
+  window.location.hash = path; // 实际没有用但看着好看一些
+  return router(back);
 };
 
 export const back = () => {
   let path = window.miracle.interaction.path;
   if (path != "/") {
-    window.miracle.interaction.path_from = path;
-    window.miracle.interaction.path = path.replace(/\/[^\/]*\/$/, "/");
-    return router(true);
+    return route(path.replace(/\/[^\/]*\/$/, "/"), true);
   } else return Promise.resolve();
 };

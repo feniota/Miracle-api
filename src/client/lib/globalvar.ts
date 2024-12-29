@@ -21,8 +21,8 @@ declare global {
 
 window.miracle = {
   interaction: {
-    path: "/",
-    path_from: "/",
+    path: "/none",
+    path_from: "/none",
     current: "",
     current_name: "",
     instances: [],

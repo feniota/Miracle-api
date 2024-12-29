@@ -1,7 +1,7 @@
 import { Button, Checkbox, Dialog, snackbar, TextField } from "mdui";
 import axios from "axios";
 import _log from "../lib/log";
-import { router } from "../components/router";
+import { route } from "../components/router";
 const log = new _log("auth");
 const btn = document.getElementById("auth-dialog-action-button")! as Button;
 const dialog = document.getElementById("auth-dialog")! as Dialog;
@@ -48,7 +48,7 @@ const successHandler = (
   window.miracle.api.expires = expires;
   dialog.open = false;
   snackbar({ message: "身份验证成功", closeable: true, queue: "miracle" });
-  router();
+  route("/");
 };
 const setbtnloading = () => {
   btn.loading = true;

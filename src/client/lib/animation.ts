@@ -6,7 +6,7 @@ export function main_fade_out(element: HTMLElement, back?: boolean) {
   const styles = getComputedStyle(element);
   return element.animate(keyframes, {
     duration: parseInt(
-      styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
+      styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2)
     ),
     easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
   });
@@ -20,7 +20,7 @@ export function main_fade_in(element: HTMLElement, back?: boolean) {
   const styles = getComputedStyle(element);
   return element.animate(keyframes, {
     duration: parseInt(
-      styles.getPropertyValue("--mdui-motion-duration-medium1").slice(0, -2)
+      styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
     ),
     easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
   });
@@ -41,7 +41,7 @@ export function list_item_in(parent: HTMLElement) {
       let anim = element.animate(keyframes, {
         delay,
         duration: parseInt(
-          styles.getPropertyValue("--mdui-motion-duration-medium1").slice(0, -2)
+          styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
       });
@@ -72,12 +72,11 @@ export function list_item_out(parent: HTMLElement) {
       let anim = element.animate(keyframes, {
         delay,
         duration: parseInt(
-          styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
+          styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2)
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
       });
       if (index === parent.children.length - 1) {
-        console.log(element);
         result = anim;
       }
     });
