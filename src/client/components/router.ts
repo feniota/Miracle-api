@@ -16,6 +16,12 @@ import "./components.css";
 import { get_instances } from "../api/instance";
 import { snackbar } from "mdui";
 import { html } from "../lib/html";
+import {
+  list_item_in,
+  list_item_out,
+  main_fade_in,
+  main_fade_out,
+} from "../lib/animation";
 
 // compile all handlebars templates
 const instance_view = Handlebars.compile(_instance_view);
@@ -32,19 +38,29 @@ const drawlist_instance_operations = html`<mdui-list-item
     icon="image"
     id="list-item-wallpaper"
     rounded
+    style="opacity:0"
   >
     设置壁纸 </mdui-list-item
-  ><mdui-list-item icon="edit_note" id="list-item-slogan" rounded>
+  ><mdui-list-item
+    icon="edit_note"
+    id="list-item-slogan"
+    rounded
+    style="opacity:0"
+  >
     标语编辑 </mdui-list-item
-  ><mdui-list-item icon="data_object" id="list-item-config" rounded>
+  ><mdui-list-item
+    icon="data_object"
+    id="list-item-config"
+    rounded
+    style="opacity:0"
+  >
     配置文件
   </mdui-list-item>`;
-export const router = () => {
+export const router = async (back?: boolean): Promise<void> => {
   const path = window.miracle.interaction.path;
   const main = document.getElementById("main")!;
   const drawerlist = document.getElementById("navigation-drawer-list")!;
   const title = document.getElementById("top-title")!;
-
   log.log("route, path: " + path);
 
   if (path == "/") {
@@ -52,19 +68,31 @@ export const router = () => {
   } else {
     document.getElementById("back-button")!.classList.remove("hidden");
   }
-
+  await new Promise<void>((resolve, _reject) => {
+    main_fade_out(main, back).onfinish = () => {
+      resolve();
+    };
+  });
+  main.style.opacity = "0";
   switch (path) {
     case "/":
       title.innerHTML = "Feniota Miracle 控制台";
+      await list_item_out(drawerlist);
       drawerlist.innerHTML = html`<mdui-list-item
           id="list-item-instance"
           icon="dns--two-tone"
           rounded
+          style="opacity:0"
           active
           >实例列表</mdui-list-item
-        ><mdui-list-item id="list-item-master" icon="settings--two-tone" rounded
+        ><mdui-list-item
+          id="list-item-master"
+          icon="settings--two-tone"
+          rounded
+          style="opacity:0"
           >服务器设置</mdui-list-item
         >`;
+      list_item_in(drawerlist);
       main.innerHTML = html`<div class="main">
         <mdui-circular-progress id="empty-placeholder"></mdui-circular-progress>
       </div>`;
@@ -98,6 +126,7 @@ export const router = () => {
       master_new_instance_listener();
       break;
     case "/instance/":
+      await list_item_out(drawerlist);
       drawerlist.innerHTML = html`{{#each instances}}
         <mdui-list-item
           class="instance-list-item"
@@ -105,9 +134,15 @@ export const router = () => {
           rounded
           miracle-instance-id="{{id}}"
           miracle-instance-name="{{name}}"
+          style="opacity:0"
           >{{name}}</mdui-list-item
         >
-        {{/each}} ${{ instances: window.miracle.interaction.instances }}`;
+        {{/each}}
+        ${{
+          instances: window.miracle.interaction.instances,
+          current_id: window.miracle.interaction.current,
+        }}`;
+      list_item_in(drawerlist);
       main.innerHTML = instance_panel({});
       title.innerHTML = window.miracle.interaction.current_name;
       instance_panel_listener();
@@ -115,37 +150,56 @@ export const router = () => {
     case "/instance/wallpaper/":
       title.innerHTML = window.miracle.interaction.current_name + " - 壁纸编辑";
       main.innerHTML = instance_wallpaper({});
-      drawerlist.innerHTML = drawlist_instance_operations;
+      if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
+        await list_item_out(drawerlist);
+        drawerlist.innerHTML = drawlist_instance_operations;
+        list_item_in(drawerlist);
+      }
       instance_op_navbar_listener();
       break;
     case "/instance/slogan/":
       title.innerHTML = window.miracle.interaction.current_name + " - 标语编辑";
       main.innerHTML = instance_slogan({});
-      drawerlist.innerHTML = drawlist_instance_operations;
+      if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
+        await list_item_out(drawerlist);
+        drawerlist.innerHTML = drawlist_instance_operations;
+        list_item_in(drawerlist);
+      }
       instance_op_navbar_listener();
       break;
     case "/instance/config/":
       title.innerHTML = window.miracle.interaction.current_name + " - 配置文件";
       main.innerHTML = instance_config({});
-      drawerlist.innerHTML = drawlist_instance_operations;
+      console.log(window.miracle.interaction.path_from);
+      if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
+        console.log("animate");
+        await list_item_out(drawerlist);
+        drawerlist.innerHTML = drawlist_instance_operations;
+        list_item_in(drawerlist);
+      }
       instance_op_navbar_listener();
       break;
     default:
       log.warn("Unrecognized path: " + path);
-      return;
   }
+  main_fade_in(main, back).onfinish = () => {
+    main.style.opacity = "1";
+  };
+  return;
 };
 
 export const route = (path: string) => {
+  window.miracle.interaction.path_from = window.miracle.interaction.path;
   window.location.hash = path; // 实际没有用但看着好看一些
   window.miracle.interaction.path = path;
-  router();
+  return router();
 };
 
 export const back = () => {
   let path = window.miracle.interaction.path;
   if (path != "/") {
+    window.miracle.interaction.path_from = path;
     window.miracle.interaction.path = path.replace(/\/[^\/]*\/$/, "/");
-    router();
-  }
+    return router(true);
+  } else return Promise.resolve();
 };

@@ -1,5 +1,6 @@
 export type MiracleGlobalVar = {
   interaction: {
+    path_from: string;
     path: string;
     current: string;
     current_name: string;
@@ -19,6 +20,12 @@ declare global {
 }
 
 window.miracle = {
-  interaction: { path: "/", current: "", current_name: "", instances: [] },
+  interaction: {
+    path: "/",
+    path_from: "/",
+    current: "",
+    current_name: "",
+    instances: [],
+  },
   api: { type: "instance", token: "", expires: 0 },
 };

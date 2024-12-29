@@ -12,6 +12,10 @@ const initlistener = (cardonly?: boolean) => {
         window.miracle.interaction.current_name = element.getAttribute(
           "miracle-instance-name"
         )!;
+        (element as HTMLElement).style.setProperty(
+          "view-transition-name",
+          "main-layout"
+        );
         route("/instance/");
       });
     });

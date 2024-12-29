@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  rollup@^2.0.0: '*'
+  rollup@^2.0.0: ^4.0.0
 
 importers:
 
@@ -947,7 +947,7 @@ packages:
   rollup-plugin-minify-html-literals@1.2.6:
     resolution: {integrity: sha512-JRq2fjlCTiw0zu+1Sy3ClHGCxA79dWGr4HLHWSQgd060StVW9fBVksuj8Xw/suPkNSGClJf/4xNQ1MF6JeXPaw==}
     peerDependencies:
-      rollup: '*'
+      rollup: ^4.0.0
 
   rollup-pluginutils@2.8.2:
     resolution: {integrity: sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==}

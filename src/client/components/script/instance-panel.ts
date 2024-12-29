@@ -1,9 +1,17 @@
+import { ListItem } from "mdui";
 import { route } from "../router";
 const initlistener = () => {
-  let instance_list_item =
-    document.getElementsByClassName("instance-list-item");
+  let instance_list_item = document.getElementsByClassName(
+    "instance-list-item"
+  ) as HTMLCollectionOf<ListItem>;
   if (instance_list_item) {
     Array.from(instance_list_item).forEach((element) => {
+      if (
+        element.getAttribute("miracle-instance-id") ===
+        window.miracle.interaction.current
+      )
+        element.active = true;
+      else element.active = false;
       element.addEventListener("click", () => {
         window.miracle.interaction.current = element.getAttribute(
           "miracle-instance-id"

@@ -7,7 +7,7 @@ let _html_precompiled: any = {};
 export function html(strings: TemplateStringsArray, ...values: any[]) {
   if (!strings) return "";
   if (!values) return strings.join("");
-  if (strings[strings.length - 1] == "") {
+  if (strings[strings.length - 1] === "") {
     // 这意味着模板的末尾有变量，因此把传入的字符当 Handlebars 模板
     let input = strings.reduce((acc, str, i) => {
       acc += str;
@@ -16,7 +16,8 @@ export function html(strings: TemplateStringsArray, ...values: any[]) {
       }
       return acc;
     }, "");
-    _html_precompiled[input] = Handlebars.compile(input);
+    if (!_html_precompiled[input])
+      _html_precompiled[input] = Handlebars.compile(input);
     return _html_precompiled[input](values[values.length - 1]);
   }
   return strings.reduce((acc, str, i) => {
