@@ -16,7 +16,7 @@ import Log from "../lib/log";
 import Handlebars from "handlebars";
 import "./components.css";
 import { get_instances } from "../api/instance";
-import { snackbar } from "mdui";
+import { breakpoint, snackbar } from "mdui";
 import { html } from "../lib/html";
 import {
   list_item_in,
@@ -87,7 +87,7 @@ const router = async (back?: boolean): Promise<void> => {
           window.miracle.interaction.path_from === "/"
         )
       ) {
-        await list_item_out(drawerlist);
+        await list_item_out(drawerlist, back);
         drawerlist.innerHTML = html`<mdui-list-item
             id="list-item-instance"
             icon="dns"
@@ -102,7 +102,7 @@ const router = async (back?: boolean): Promise<void> => {
             style="opacity:0"
             >服务器设置</mdui-list-item
           >`;
-        list_item_in(drawerlist);
+        list_item_in(drawerlist, back);
       }
       main.innerHTML = html`<div class="main">
         <mdui-circular-progress id="empty-placeholder"></mdui-circular-progress>
@@ -110,8 +110,9 @@ const router = async (back?: boolean): Promise<void> => {
       get_instances()
         .then((instances) => {
           if (instances.length != 0) {
+            const md = breakpoint().up("md");
             window.miracle.interaction.instances = instances;
-            main.innerHTML = instance_view({ instances });
+            main.innerHTML = instance_view({ instances, md });
             instance_view_listener(true);
           } else {
             window.miracle.interaction.instances = [];
@@ -147,7 +148,7 @@ const router = async (back?: boolean): Promise<void> => {
       main.innerHTML = instance_panel({});
       title.innerHTML = window.miracle.interaction.current_name;
       if (window.miracle.interaction.path_from !== "/instance/") {
-        await list_item_out(drawerlist);
+        await list_item_out(drawerlist, back);
         drawerlist.innerHTML = html`{{#each instances}}
           <mdui-list-item
             class="instance-list-item"
@@ -163,7 +164,7 @@ const router = async (back?: boolean): Promise<void> => {
             instances: window.miracle.interaction.instances,
             current_id: window.miracle.interaction.current,
           }}`;
-        list_item_in(drawerlist);
+        list_item_in(drawerlist, back);
       }
       instance_panel_listener();
       break;
@@ -171,9 +172,9 @@ const router = async (back?: boolean): Promise<void> => {
       title.innerHTML = window.miracle.interaction.current_name + " - 壁纸编辑";
       main.innerHTML = instance_wallpaper({});
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
-        await list_item_out(drawerlist);
+        await list_item_out(drawerlist, back);
         drawerlist.innerHTML = drawlist_instance_operations;
-        list_item_in(drawerlist);
+        list_item_in(drawerlist, back);
       }
       instance_op_navbar_listener();
       break;
@@ -181,9 +182,9 @@ const router = async (back?: boolean): Promise<void> => {
       title.innerHTML = window.miracle.interaction.current_name + " - 标语编辑";
       main.innerHTML = instance_slogan({});
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
-        await list_item_out(drawerlist);
+        await list_item_out(drawerlist, back);
         drawerlist.innerHTML = drawlist_instance_operations;
-        list_item_in(drawerlist);
+        list_item_in(drawerlist, back);
       }
       instance_op_navbar_listener();
       break;
@@ -192,9 +193,9 @@ const router = async (back?: boolean): Promise<void> => {
       main.innerHTML = instance_config({});
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
         console.log("animate");
-        await list_item_out(drawerlist);
+        await list_item_out(drawerlist, back);
         drawerlist.innerHTML = drawlist_instance_operations;
-        list_item_in(drawerlist);
+        list_item_in(drawerlist, back);
       }
       instance_op_navbar_listener();
       break;

@@ -26,17 +26,20 @@ export function main_fade_in(element: HTMLElement, back?: boolean) {
   });
 }
 
-export function list_item_in(parent: HTMLElement) {
+export function list_item_in(parent: HTMLElement, back?: boolean) {
   return new Promise<void>((resolve, _reject) => {
     const keyframes: Keyframe[] = [
-      { opacity: 0, transform: "translateY(10px)" },
+      {
+        opacity: 0,
+        transform: back ? "translateY(-10px)" : "translateY(10px)",
+      },
       { opacity: 1, transform: "translateY(0px)" },
     ];
     const styles = getComputedStyle(parent);
     const total = 30 * (parent.children.length - 1);
     let result: any;
     Array.from(parent.children).forEach((element, index) => {
-      const delay = total - index * 30;
+      const delay = back ? index * 30 : total - index * 30;
       setTimeout(() => ((element as HTMLElement).style.opacity = "1"), delay);
       const anim = element.animate(keyframes, {
         delay,
@@ -45,7 +48,8 @@ export function list_item_in(parent: HTMLElement) {
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
       });
-      if (index === 0) result = anim;
+      if (back ? index === parent.children.length - 1 : index === 0)
+        result = anim;
     });
 
     if (result) {
@@ -58,16 +62,20 @@ export function list_item_in(parent: HTMLElement) {
   });
 }
 
-export function list_item_out(parent: HTMLElement) {
+export function list_item_out(parent: HTMLElement, back?: boolean) {
   return new Promise<void>((resolve, _reject) => {
     const keyframes: Keyframe[] = [
       { opacity: 1, transform: "translateY(0px)" },
-      { opacity: 0, transform: "translateY(-10px)" },
+      {
+        opacity: 0,
+        transform: back ? "translateY(10px)" : "translateY(-10px)",
+      },
     ];
     const styles = getComputedStyle(parent);
+    const total = 30 * (parent.children.length - 1);
     let result: any;
     Array.from(parent.children).forEach((element, index) => {
-      const delay = index * 30;
+      const delay = back ? index * 30 : total - index * 30;
       setTimeout(() => ((element as HTMLElement).style.opacity = "0"), delay);
       const anim = element.animate(keyframes, {
         delay,
@@ -76,7 +84,7 @@ export function list_item_out(parent: HTMLElement) {
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
       });
-      if (index === parent.children.length - 1) {
+      if (back ? index === parent.children.length - 1 : index === 0) {
         result = anim;
       }
     });
@@ -89,3 +97,5 @@ export function list_item_out(parent: HTMLElement) {
     }
   });
 }
+
+export async function change_title(element: HTMLElement, title: string) {}

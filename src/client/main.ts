@@ -7,7 +7,9 @@ import "./api/auth";
 import "./lib/globalvar";
 import { back } from "./components/router";
 
-const drawer = document.getElementById("navigation-drawer")! as NavigationDrawer;
+const drawer = document.getElementById(
+  "navigation-drawer"
+)! as NavigationDrawer;
 
 {
   const button = document.getElementById("navigation-drawer-button")!;
@@ -51,6 +53,7 @@ const drawer = document.getElementById("navigation-drawer")! as NavigationDrawer
     breakpoint().up("md") ? (drawer.open = true) : (drawer.open = false);
     observeBreakpoint("dialog-manual-width");
     observeBreakpoint("content");
+    observeBreakpoint("main");
   };
   observeResize(document.body, resize_functions);
   // 确保在加载完页面后执行一次

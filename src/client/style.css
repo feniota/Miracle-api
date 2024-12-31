@@ -36,13 +36,15 @@
 
 :is(.content-row, .-md-content)>* {
   margin-right: 10px;
-
+  margin-bottom: 10px;
 }
 
 .content-row,
 .-md-content {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  align-content: start;
 }
 
 .center {
