@@ -40,22 +40,20 @@ export function list_item_in(parent: HTMLElement, back?: boolean) {
     let result: any;
     Array.from(parent.children).forEach((element, index) => {
       const delay = back ? index * 30 : total - index * 30;
-      setTimeout(() => ((element as HTMLElement).style.opacity = "1"), delay);
       const anim = element.animate(keyframes, {
         delay,
         duration: parseInt(
           styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
+        fill: "forwards",
       });
       if (back ? index === parent.children.length - 1 : index === 0)
         result = anim;
     });
 
     if (result) {
-      result.onfinish = () => {
-        resolve();
-      };
+      result.addEventListener("finish", () => resolve());
     } else {
       resolve();
     }
@@ -76,22 +74,20 @@ export function list_item_out(parent: HTMLElement, back?: boolean) {
     let result: any;
     Array.from(parent.children).forEach((element, index) => {
       const delay = back ? index * 30 : total - index * 30;
-      setTimeout(() => ((element as HTMLElement).style.opacity = "0"), delay);
       const anim = element.animate(keyframes, {
         delay,
         duration: parseInt(
           styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2)
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
+        fill: "forwards",
       });
       if (back ? index === parent.children.length - 1 : index === 0) {
         result = anim;
       }
     });
     if (result) {
-      result.onfinish = () => {
-        resolve();
-      };
+      result.addEventListener("finish", () => resolve());
     } else {
       resolve();
     }
