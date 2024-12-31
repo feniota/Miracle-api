@@ -3,6 +3,8 @@ import { MiracleData } from "../misc/data-management";
 import { MiracleAuth } from "../misc/auth";
 import web_tokens from "./web-tokens";
 import instances from "./instance";
+import { MiracleTask } from "../misc/task";
+import master from "./master";
 
 class MiracleApi {
   private _data: MiracleData;
@@ -20,8 +22,11 @@ class MiracleApi {
     this._data = data;
     this._auth = new MiracleAuth();
 
+    new MiracleTask(this.data);
+
     web_tokens(router, this.data, this.auth);
     instances(router, this.data, this.auth);
+    master(router, this.data, this.auth);
 
     this.app = router;
   }

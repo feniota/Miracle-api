@@ -29,10 +29,19 @@ const initlistener = () => {
                   >实例 ${name.value}（ID：${id.value}）创建成功，以下是实例的
                   API 密钥。</span
                 >
-                <span class="err"
-                  >该密钥仅出现一次，请妥善保存！</span
+                <span class="err">该密钥仅出现一次，请妥善保存！</span>
+                <mdui-text-field
+                  variant="outlined"
+                  readonly
+                  value="${res.data.key}"
+                  class="text-field-monospace"
                 >
-                <mdui-text-field variant="outlined" readonly value="${res.data.key}" class="text-field-monospace"></mdui-text-field
+                  <mdui-button-icon
+                    slot="end-icon"
+                    icon="content_copy"
+                    id="new-instance-copy-button"
+                  ></mdui-button-icon>
+                </mdui-text-field>
               </div>`,
               actions: [
                 {
@@ -41,7 +50,13 @@ const initlistener = () => {
               ],
               closeOnEsc: true,
               closeOnOverlayClick: true,
-            });
+            })
+              .querySelector("#new-instance-copy-button")!
+              .addEventListener("click", () => {
+                navigator.clipboard
+                  .writeText(res.data.key)
+                  .then(() => snackbar({ message: "已复制到剪贴板" }));
+              });
           } else {
             snackbar({ message: "创建失败：" + res.data.msg });
           }

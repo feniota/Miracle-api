@@ -16,7 +16,6 @@ const tokens = (
     console.log(req.body);
     try {
       const body = ReqWebAuthMaster.check(req.body);
-
       if (data().check_master_key(body.key)) {
         const token = auth().new_master_token();
         res.json({ success: true, ...token } as ResToken);
@@ -30,7 +29,6 @@ const tokens = (
   });
 
   app.post("/web/auth/instance", (req, res) => {
-    console.log(req.body);
     try {
       const body = ReqWebAuthInstance.check(req.body);
       if (data().check_instance_key(body.id, body.key)) {

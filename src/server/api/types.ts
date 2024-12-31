@@ -49,3 +49,10 @@ export const ResNewInstance = Record({
   key: String,
 });
 export type ResNewInstance = Static<typeof ResNewInstance>;
+
+export const ReqSetWeatherKey = Record({
+  token: String,
+  weather_key: String,
+});
+
+export type ReqSetWeatherKey = Static<typeof ReqSetWeatherKey>;

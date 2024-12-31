@@ -1,4 +1,4 @@
-import { ListItem } from "mdui";
+import { ListItem, snackbar } from "mdui";
 import { route } from "../router";
 const initlistener = () => {
   const instance_list_item = document.getElementsByClassName(
@@ -13,6 +13,14 @@ const initlistener = () => {
         element.active = true;
       else element.active = false;
       element.addEventListener("click", () => {
+        if (
+          window.miracle.api.type === "instance" &&
+          element.getAttribute("data-miracle-instance-id") !==
+            window.miracle.api.instance
+        ) {
+          snackbar({ message: "实例与当前密钥不匹配" });
+          return;
+        }
         window.miracle.interaction.current = element.getAttribute(
           "miracle-instance-id"
         )!;

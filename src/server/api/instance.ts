@@ -1,72 +1,14 @@
 import { Router } from "express";
 import { MiracleAuth } from "../misc/auth";
 import { MiracleData } from "../misc/data-management";
-import {
-  ReqNewInstance,
-  ReqRemoveInstance,
-  ResError,
-  ResInstance,
-  ResNewInstance,
-} from "./types";
+import { ReqWebAuthInstance, ResError, ResInstance } from "./types";
 
 const instances = (
   app: Router,
   data: () => MiracleData,
+  // @ts-ignore
   auth: () => MiracleAuth
 ) => {
-  app.post("/web/instances/new", (req, res) => {
-    try {
-      const body = ReqNewInstance.check(req.body);
-      const checktoken = auth().check_token(body.token);
-      if (checktoken.valid && checktoken.type === "master") {
-        const key = data().new_instance(body.name, body.id);
-        if (!key) {
-          res.json({
-            success: false,
-            msg: "Instance already exists",
-          } as ResError);
-        } else {
-          data().write();
-          res.json({ success: true, key } as ResNewInstance);
-        }
-      } else {
-        res.json({ success: false, msg: "Invalid key" } as ResError);
-      }
-    } catch (e) {
-      res.status(400);
-      res.json({ success: false, msg: e } as ResError);
-    }
-  });
-
-  app.post("/web/instances/remove", (req, res) => {
-    try {
-      const body = ReqRemoveInstance.check(req.body);
-      const checktoken = auth().check_token(body.token);
-      if (checktoken.valid && checktoken.type === "master") {
-        let success = true;
-        body.instances.forEach((id) => {
-          if (!data().remove_instance(id)) {
-            success = false;
-          }
-        });
-        if (success) {
-          data().write();
-          res.json({ success: true, msg: "" } as ResError);
-        } else {
-          res.json({
-            success: false,
-            msg: "Some of the instances not found",
-          } as ResError);
-        }
-      } else {
-        res.json({ success: false, msg: "Invalid key" } as ResError);
-      }
-    } catch (e) {
-      res.status(400);
-      res.json({ success: false, msg: e } as ResError);
-    }
-  });
-
   app.get("/web/instances/get", (_req, res) => {
     const instances = data()
       .get_instances()
@@ -77,6 +19,36 @@ const instances = (
         };
       });
     res.json(instances as ResInstance[]);
+  });
+
+  app.post("/instance/checkexists", (req, res) => {
+    try {
+      const body = ReqWebAuthInstance.check(req.body);
+      if (data().check_instance_key(body.id, body.key)) {
+        res.json({ success: true, msg: "" } as ResError);
+      } else {
+        res.json({ success: false, msg: "Invalid key" } as ResError);
+      }
+    } catch (e) {
+      res.status(400);
+      res.json({ success: false, msg: e } as ResError);
+    }
+  });
+
+  app.post("/instance/getconfig", (req, res) => {
+    try {
+      const body = ReqWebAuthInstance.check(req.body);
+      if (data().check_instance_key(body.id, body.key)) {
+        let config = data().get_instance_config(body.id);
+        config;
+        res.json({ success: true, config });
+      } else {
+        res.json({ success: false, msg: "Invalid key" });
+      }
+    } catch (e) {
+      res.status(400);
+      res.json({ success: false, msg: e } as ResError);
+    }
   });
 };
 

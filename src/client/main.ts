@@ -3,7 +3,6 @@ import "mdui/mdui.css";
 import "mdui";
 import {
   breakpoint,
-  Checkbox,
   Menu,
   NavigationDrawer,
   observeResize,
@@ -56,28 +55,6 @@ const log = new Log("main");
     darkmode.value = storage_dark || "auto";
     setTheme(storage_dark as Theme);
   }
-}
-
-{
-  const mastercheckbox = document.getElementById(
-    "auth-dialog-master-checkbox"
-  )! as Checkbox;
-  const masterfield = document.getElementById("auth-dialog-fields-master")!;
-  const instancefield = document.getElementById("auth-dialog-fields-instance")!;
-  const dialog = document.getElementById("auth-dialog")!;
-  mastercheckbox.addEventListener("change", () => {
-    if (mastercheckbox.checked) {
-      if (breakpoint().up("md")) {
-        dialog.classList.add("dialog-manual-width");
-      }
-      masterfield.classList.remove("hidden");
-      instancefield.classList.add("hidden");
-    } else {
-      dialog.classList.remove("dialog-manual-width");
-      masterfield.classList.add("hidden");
-      instancefield.classList.remove("hidden");
-    }
-  });
 }
 
 {

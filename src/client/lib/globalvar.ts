@@ -10,6 +10,7 @@ export type MiracleGlobalVar = {
   };
   api: {
     type: "instance" | "master";
+    instance: string;
     token: string;
     expires: number;
   };
@@ -29,5 +30,5 @@ window.miracle = {
     current_name: "",
     instances: [],
   },
-  api: { type: "instance", token: "", expires: 0 },
+  api: { type: "instance", instance: "", token: "", expires: 0 },
 };

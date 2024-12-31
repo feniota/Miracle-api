@@ -34,6 +34,8 @@ import path from "node:path";
 
   app.use("/api/v1", new api_router(_data).get_router());
 
+  app.get("/generate_204", (_, res) => res.sendStatus(204));
+
   ViteExpress.listen(app, port, () =>
     console.log("Server is listening on http://localhost:" + port)
   );

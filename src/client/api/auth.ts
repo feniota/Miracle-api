@@ -37,7 +37,8 @@ const errHandler = (
 const successHandler = (
   type: "instance" | "master",
   token: string,
-  expires: number
+  expires: number,
+  instance?: string
 ): void => {
   if (!(typeof token === "string" && typeof expires === "number")) {
     errHandler("wrongtype");
@@ -46,8 +47,9 @@ const successHandler = (
   window.miracle.api.type = type;
   window.miracle.api.token = token;
   window.miracle.api.expires = expires;
+  window.miracle.api.instance = instance || "";
   dialog.open = false;
-  snackbar({ message: "身份验证成功", closeable: true, queue: "miracle" });
+  snackbar({ message: "身份验证成功", closeable: true });
   route("/");
 };
 const setbtnloading = () => {
@@ -90,7 +92,12 @@ const unsetbtnloading = () => {
           if (!res.data.success) {
             errHandler("key-instance");
           } else {
-            successHandler("instance", res.data.token, res.data.expires);
+            successHandler(
+              "instance",
+              res.data.token,
+              res.data.expires,
+              res.data.instance_id
+            );
           }
         })
         .catch((_e) => (e = _e));
@@ -156,7 +163,12 @@ btn.addEventListener("click", async () => {
       );
     }
     if (res.data.success) {
-      successHandler("instance", res.data.token, res.data.expires);
+      successHandler(
+        "instance",
+        res.data.token,
+        res.data.expires,
+        res.data.instance_id
+      );
     } else {
       errHandler("key-instance");
     }
@@ -171,3 +183,20 @@ export const check_token_expire = (): boolean => {
     return false;
   }
 };
+
+{
+  const mastercheckbox = document.getElementById(
+    "auth-dialog-master-checkbox"
+  )! as Checkbox;
+  const masterfield = document.getElementById("auth-dialog-fields-master")!;
+  const instancefield = document.getElementById("auth-dialog-fields-instance")!;
+  mastercheckbox.addEventListener("change", () => {
+    if (mastercheckbox.checked) {
+      masterfield.classList.remove("hidden");
+      instancefield.classList.add("hidden");
+    } else {
+      masterfield.classList.add("hidden");
+      instancefield.classList.remove("hidden");
+    }
+  });
+}

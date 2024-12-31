@@ -1,9 +1,17 @@
-import { Number, String, Array, Record, Static } from "runtypes";
+import {
+  Number,
+  String,
+  Array,
+  Record,
+  Static,
+  Literal,
+  Union,
+} from "runtypes";
 import { writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
 import { createHash, randomBytes } from "node:crypto";
 
-const MiracleInstanceDataType = Record({
+export const MiracleInstanceDataType = Record({
   api_key: String,
   name: String,
   id: String,
@@ -13,17 +21,23 @@ const MiracleInstanceDataType = Record({
     cee_date: String,
     weather_city: String,
   }),
+  slogan: Record({
+    content: String,
+    author: String,
+  }),
+  wallpaper: Record({
+    last_updated: Number,
+    path: String,
+    source: Union(Literal("spotlight"), Literal("bing"), Literal("manunal")),
+  }),
 });
 
 export type MiracleInstanceDataType = Static<typeof MiracleInstanceDataType>;
 
-const MiracleDataType = Record({
+export const MiracleDataType = Record({
+  version: Literal("v1"),
   common: Record({
     master_key: String,
-    wallpaper: Record({
-      last_updated: Number,
-      path: String,
-    }),
     weather: Record({
       key: String,
     }),
@@ -76,31 +90,35 @@ export class MiracleData {
       );
       process.exit(1);
     }
-    try {
-      dataobj = MiracleDataType.check(dataobj);
-    } catch (e) {
-      console.error(
-        "Fatal error occured when parsing data from file: \nUnmatched types.\nshutting down..."
+    if (dataobj.version === "v1") {
+      try {
+        dataobj = MiracleDataType.check(dataobj);
+      } catch (e) {
+        console.error(
+          "Fatal error occured when parsing data from file: \nUnmatched types.\nshutting down..."
+        );
+        console.error("\ndetails: " + e);
+        process.exit(1);
+      }
+      return new MiracleData(
+        dataobj,
+        path.dirname(file_path),
+        path.basename(file_path)
       );
-      console.error("\ndetails: " + e);
+    } else {
+      console.error(
+        "Fatal error occured when parsing data from file: \nUnknown version.\nshutting down..."
+      );
       process.exit(1);
     }
-    return new MiracleData(
-      dataobj,
-      path.dirname(file_path),
-      path.basename(file_path)
-    );
   }
 
   static new_dataset(file_path: string) {
     return new MiracleData(
       {
+        version: "v1",
         common: {
           master_key: "",
-          wallpaper: {
-            last_updated: Date.now(),
-            path: "",
-          },
           weather: {
             key: "",
           },
@@ -167,11 +185,20 @@ export class MiracleData {
       api_key: hash(key),
       name: name,
       id: id,
+      wallpaper: {
+        last_updated: 0,
+        path: "",
+        source: "manunal",
+      },
       config: {
         weather_city: "",
         schedule: [],
         schedule_divider_indexes: [],
         cee_date: "",
+      },
+      slogan: {
+        content: "",
+        author: "",
       },
     });
     return key;
@@ -179,6 +206,16 @@ export class MiracleData {
 
   get_instances = () => {
     return this._data.common.instances;
+  };
+
+  set_weather_key = (key: string) => {
+    this._data.common.weather.key = key;
+  };
+
+  get_instance_config = (instance_id: string) => {
+    return this._data.common.instances.find(
+      (element) => element.id === instance_id
+    )!.config;
   };
 
   constructor(data: MiracleDataType, dir: string, config_filename: string) {

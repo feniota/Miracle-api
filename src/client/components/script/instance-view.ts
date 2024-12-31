@@ -7,6 +7,14 @@ const initlistener = (card?: boolean) => {
     if (instance_card) {
       Array.from(instance_card).forEach((element) => {
         element.addEventListener("click", () => {
+          if (
+            window.miracle.api.type === "instance" &&
+            element.getAttribute("data-miracle-instance-id") !==
+              window.miracle.api.instance
+          ) {
+            snackbar({ message: "实例与当前密钥不匹配" });
+            return;
+          }
           window.miracle.interaction.current = element.getAttribute(
             "data-miracle-instance-id"
           )!;
@@ -38,9 +46,7 @@ const initlistener = (card?: boolean) => {
       });
     } else {
       list_item_master.disabled = true;
-      list_item_master.addEventListener("click", () =>
-        snackbar({ message: "实例 API 不允许修改服务器设置" })
-      );
+      list_item_master.innerHTML += " (已禁用)";
     }
   }
 };
