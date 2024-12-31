@@ -70,3 +70,10 @@
     color: rgb(var(--mdui-color-secondary));
   }
 }
+
+.remove-instance {
+  :is(mdui-card).miracle-selected {
+    outline-width: 1px;
+    outline-color: rgb(var(--mdui-color-primary));
+  }
+}

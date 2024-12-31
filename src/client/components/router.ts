@@ -5,11 +5,13 @@ import _instance_slogan from "./template/instance-slogan.handlebars?raw";
 import _instance_config from "./template/instance-config.handlebars?raw";
 import _master_settings from "./template/master-settings.handlebars?raw";
 import _master_new_instance from "./template/master-new-instance.handlebars?raw";
+import _master_remove_instance from "./template/master-remove-instance.handlebars?raw";
 import instance_view_listener from "./script/instance-view";
 import instance_panel_listener from "./script/instance-panel";
 import instance_op_navbar_listener from "./script/instance-navbar";
 import master_settings_listener from "./script/master-settings";
 import master_new_instance_listener from "./script/master-new-instance";
+import master_remove_instance_listener from "./script/master-remove-instance";
 import Log from "../lib/log";
 import Handlebars from "handlebars";
 import "./components.css";
@@ -31,6 +33,7 @@ const instance_slogan = Handlebars.compile(_instance_slogan);
 const instance_config = Handlebars.compile(_instance_config);
 const master_settings = Handlebars.compile(_master_settings);
 const master_new_instance = Handlebars.compile(_master_new_instance);
+const master_remove_instance = Handlebars.compile(_master_remove_instance);
 
 const log = new Log("router");
 
@@ -87,14 +90,14 @@ const router = async (back?: boolean): Promise<void> => {
         await list_item_out(drawerlist);
         drawerlist.innerHTML = html`<mdui-list-item
             id="list-item-instance"
-            icon="dns--two-tone"
+            icon="dns"
             rounded
             style="opacity:0"
             active
             >实例列表</mdui-list-item
           ><mdui-list-item
             id="list-item-master"
-            icon="settings--two-tone"
+            icon="settings"
             rounded
             style="opacity:0"
             >服务器设置</mdui-list-item
@@ -133,6 +136,13 @@ const router = async (back?: boolean): Promise<void> => {
       main.innerHTML = master_new_instance({});
       master_new_instance_listener();
       break;
+    case "/master/remove-instance/":
+      title.innerHTML = "删除实例";
+      main.innerHTML = master_remove_instance({
+        instances: window.miracle.interaction.instances,
+      });
+      master_remove_instance_listener();
+      break;
     case "/instance/":
       main.innerHTML = instance_panel({});
       title.innerHTML = window.miracle.interaction.current_name;
@@ -141,7 +151,7 @@ const router = async (back?: boolean): Promise<void> => {
         drawerlist.innerHTML = html`{{#each instances}}
           <mdui-list-item
             class="instance-list-item"
-            icon="dns--two-tone"
+            icon="dns"
             rounded
             miracle-instance-id="{{id}}"
             miracle-instance-name="{{name}}"
@@ -205,7 +215,7 @@ export const route = (path: string, back?: boolean) => {
 };
 
 export const back = () => {
-  let path = window.miracle.interaction.path;
+  const path = window.miracle.interaction.path;
   if (path != "/") {
     return route(path.replace(/\/[^\/]*\/$/, "/"), true);
   } else return Promise.resolve();

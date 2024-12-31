@@ -13,7 +13,7 @@ export type MiracleAuthTokenType = Static<typeof MiracleAuthTokenType>;
 export class MiracleAuth {
   tokens: Map<string, MiracleAuthTokenType>;
   new_token(instance_id: string): MiracleAuthTokenType {
-    let token = {
+    const token = {
       type: "instance",
       instance_id,
       token: crypto.randomBytes(32).toString("base64url"),
@@ -24,7 +24,7 @@ export class MiracleAuth {
   }
 
   new_master_token(): MiracleAuthTokenType {
-    let token = {
+    const token = {
       type: "master",
       instance_id: "",
       token: crypto.randomBytes(32).toString("base64url"),
@@ -37,7 +37,7 @@ export class MiracleAuth {
   check_token = (
     token: string
   ): { valid: boolean; type?: string; instance_id?: string } => {
-    let token_obj = this.tokens.get(token);
+    const token_obj = this.tokens.get(token);
     if (token_obj) {
       if (Date.now() >= token_obj.expires) {
         return { valid: false };

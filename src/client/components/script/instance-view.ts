@@ -2,7 +2,7 @@ import { ListItem } from "mdui";
 import { route } from "../router";
 
 const initlistener = (cardonly?: boolean) => {
-  let instance_card = document.getElementsByClassName("instance-card");
+  const instance_card = document.getElementsByClassName("instance-card");
   if (instance_card) {
     Array.from(instance_card).forEach((element) => {
       element.addEventListener("click", () => {
@@ -21,10 +21,10 @@ const initlistener = (cardonly?: boolean) => {
     });
   }
   if (cardonly) return;
-  let list_item_master = document.getElementById(
+  const list_item_master = document.getElementById(
     "list-item-master"
   ) as ListItem;
-  let list_item_instance = document.getElementById(
+  const list_item_instance = document.getElementById(
     "list-item-instance"
   ) as ListItem;
   list_item_instance.addEventListener("click", () => {

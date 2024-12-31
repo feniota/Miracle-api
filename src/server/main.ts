@@ -21,7 +21,7 @@ import path from "node:path";
     if (fs.existsSync(config_file)) {
       return await MiracleData.init_from_file(config_file);
     } else {
-      let data = MiracleData.new_dataset(config_file);
+      const data = MiracleData.new_dataset(config_file);
       data.make_master_key();
       await data.write();
       return data;

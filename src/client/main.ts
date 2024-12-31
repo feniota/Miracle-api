@@ -7,10 +7,10 @@ import "./api/auth";
 import "./lib/globalvar";
 import { back } from "./components/router";
 
-let drawer = document.getElementById("navigation-drawer")! as NavigationDrawer;
+const drawer = document.getElementById("navigation-drawer")! as NavigationDrawer;
 
 {
-  let button = document.getElementById("navigation-drawer-button")!;
+  const button = document.getElementById("navigation-drawer-button")!;
 
   button.addEventListener("click", () => {
     drawer.open = !drawer.open;
@@ -18,19 +18,19 @@ let drawer = document.getElementById("navigation-drawer")! as NavigationDrawer;
 }
 
 {
-  let backbutton = document.getElementById("back-button")!;
+  const backbutton = document.getElementById("back-button")!;
   backbutton.addEventListener("click", () => {
     back();
   });
 }
 
 {
-  let mastercheckbox = document.getElementById(
+  const mastercheckbox = document.getElementById(
     "auth-dialog-master-checkbox"
   )! as Checkbox;
-  let masterfield = document.getElementById("auth-dialog-fields-master")!;
-  let instancefield = document.getElementById("auth-dialog-fields-instance")!;
-  let dialog = document.getElementById("auth-dialog")!;
+  const masterfield = document.getElementById("auth-dialog-fields-master")!;
+  const instancefield = document.getElementById("auth-dialog-fields-instance")!;
+  const dialog = document.getElementById("auth-dialog")!;
   mastercheckbox.addEventListener("change", () => {
     if (mastercheckbox.checked) {
       if (breakpoint().up("md")) {
@@ -47,7 +47,7 @@ let drawer = document.getElementById("navigation-drawer")! as NavigationDrawer;
 }
 
 {
-  let resize_functions = () => {
+  const resize_functions = () => {
     breakpoint().up("md") ? (drawer.open = true) : (drawer.open = false);
     observeBreakpoint("dialog-manual-width");
     observeBreakpoint("content");

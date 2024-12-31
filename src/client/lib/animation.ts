@@ -36,9 +36,9 @@ export function list_item_in(parent: HTMLElement) {
     const total = 30 * (parent.children.length - 1);
     let result: any;
     Array.from(parent.children).forEach((element, index) => {
-      let delay = total - index * 30;
+      const delay = total - index * 30;
       setTimeout(() => ((element as HTMLElement).style.opacity = "1"), delay);
-      let anim = element.animate(keyframes, {
+      const anim = element.animate(keyframes, {
         delay,
         duration: parseInt(
           styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
@@ -67,9 +67,9 @@ export function list_item_out(parent: HTMLElement) {
     const styles = getComputedStyle(parent);
     let result: any;
     Array.from(parent.children).forEach((element, index) => {
-      let delay = index * 30;
+      const delay = index * 30;
       setTimeout(() => ((element as HTMLElement).style.opacity = "0"), delay);
-      let anim = element.animate(keyframes, {
+      const anim = element.animate(keyframes, {
         delay,
         duration: parseInt(
           styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2)

@@ -117,7 +117,7 @@ export class MiracleData {
   }
 
   make_master_key = () => {
-    let rawkey = randomBytes(32).toString("base64url");
+    const rawkey = randomBytes(32).toString("base64url");
     this._data.common.master_key = hash(rawkey);
     console.log(
       "New master key generated:\n\n" +
@@ -140,6 +140,18 @@ export class MiracleData {
     return result;
   };
 
+  remove_instance = (id: string): boolean => {
+    const index = this._data.common.instances.findIndex(
+      (element) => element.id === id
+    );
+    if (index === -1) {
+      return false;
+    } else {
+      this._data.common.instances.splice(index, 1);
+      return true;
+    }
+  };
+
   new_instance = (name: string, id: string): string => {
     let exist = false;
     this._data.common.instances.forEach((element) => {
@@ -150,7 +162,7 @@ export class MiracleData {
     if (exist) {
       return "";
     }
-    let key = randomBytes(32).toString("base64url");
+    const key = randomBytes(32).toString("base64url");
     this._data.common.instances.push({
       api_key: hash(key),
       name: name,

@@ -1,7 +1,7 @@
 import { ListItem } from "mdui";
 import { route } from "../router";
 const initlistener = () => {
-  let instance_list_item = document.getElementsByClassName(
+  const instance_list_item = document.getElementsByClassName(
     "instance-list-item"
   ) as HTMLCollectionOf<ListItem>;
   if (instance_list_item) {

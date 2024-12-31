@@ -1,7 +1,13 @@
 import { Router } from "express";
 import { MiracleAuth } from "../misc/auth";
 import { MiracleData } from "../misc/data-management";
-import { ReqNewInstance, ResError, ResInstance, ResNewInstance } from "./types";
+import {
+  ReqNewInstance,
+  ReqRemoveInstance,
+  ResError,
+  ResInstance,
+  ResNewInstance,
+} from "./types";
 
 const instances = (
   app: Router,
@@ -10,10 +16,10 @@ const instances = (
 ) => {
   app.post("/web/instances/new", (req, res) => {
     try {
-      let body = ReqNewInstance.check(req.body);
-      let checktoken = auth().check_token(body.token);
+      const body = ReqNewInstance.check(req.body);
+      const checktoken = auth().check_token(body.token);
       if (checktoken.valid && checktoken.type === "master") {
-        let key = data().new_instance(body.name, body.id);
+        const key = data().new_instance(body.name, body.id);
         if (!key) {
           res.json({
             success: false,
@@ -32,8 +38,29 @@ const instances = (
     }
   });
 
-  app.get("/web/instances/get", (req, res) => {
-    let instances = data()
+  app.post("/web/instances/remove", (req, res) => {
+    try {
+      const body = ReqRemoveInstance.check(req.body);
+      const checktoken = auth().check_token(body.token);
+      if (checktoken.valid && checktoken.type === "master") {
+        const success = data().remove_instance(body.id);
+        if (success) {
+          data().write();
+          res.json({ success: true } as ResError);
+        } else {
+          res.json({ success: false, msg: "Instance not found" } as ResError);
+        }
+      } else {
+        res.json({ success: false, msg: "Invalid key" } as ResError);
+      }
+    } catch (e) {
+      res.status(400);
+      res.json({ success: false, msg: e } as ResError);
+    }
+  });
+
+  app.get("/web/instances/get", (_req, res) => {
+    const instances = data()
       .get_instances()
       .map((value) => {
         return {

@@ -1,0 +1,9 @@
+{{!-- data: { instances: [{name,id}] } --}}
+<div class="main remove-instance">
+  {{#each instances}}
+  <mdui-chip class="instance-chip" selectable variant="elevated" miracle-instance-id="{{ id }}"
+    miracle-instance-name="{{ name }}" >
+     <div>{{ name }}</div>
+  </mdui-chip>
+  {{/each}}
+</div>

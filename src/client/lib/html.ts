@@ -1,6 +1,6 @@
 import Handlebars from "handlebars";
 
-let _html_precompiled: any = {};
+const _html_precompiled: any = {};
 // this tag function provides inline handlebars processing
 // usage: html`<some>{{ handlebars_var }}</some>${data}`
 // will become `<some>{{ handlesbars_var }}</some>` to handlebars renderer with data
@@ -9,7 +9,7 @@ export function html(strings: TemplateStringsArray, ...values: any[]) {
   if (!values) return strings.join("");
   if (strings[strings.length - 1] === "") {
     // 这意味着模板的末尾有变量，因此把传入的字符当 Handlebars 模板
-    let input = strings.reduce((acc, str, i) => {
+    const input = strings.reduce((acc, str, i) => {
       acc += str;
       if (i < values.length - 1) {
         acc += values[i];

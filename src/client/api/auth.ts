@@ -13,7 +13,7 @@ const errHandler = (
     | "unknownmethod"
     | "wrongtype"
 ) => {
-  let errtext = () => {
+  const errtext = () => {
     switch (error) {
       case "key-instance":
         return "实例 ID 或密钥错误";
@@ -28,7 +28,7 @@ const errHandler = (
     }
   };
   dialog.open = true;
-  let errdesc = document.getElementById("auth-dialog-desc-err")!;
+  const errdesc = document.getElementById("auth-dialog-desc-err")!;
   errdesc.classList.remove("hidden");
   errdesc.innerHTML += errtext();
   document.getElementById("auth-dialog-desc-norm")!.classList.add("hidden");
@@ -61,7 +61,7 @@ const unsetbtnloading = () => {
 };
 
 {
-  let auth_method = localStorage.getItem("auth-method");
+  const auth_method = localStorage.getItem("auth-method");
   if (!auth_method) {
     dialog.open = true;
   } else {
@@ -116,7 +116,7 @@ btn.addEventListener("click", async () => {
     const master_key = document.getElementById(
       "auth-input-master-key"
     )! as TextField;
-    let res = await axios.post("/api/v1/web/auth/master", {
+    const res = await axios.post("/api/v1/web/auth/master", {
       key: master_key.value,
     });
     unsetbtnloading();
@@ -140,7 +140,7 @@ btn.addEventListener("click", async () => {
     const instance_key = document.getElementById(
       "auth-input-instance-key"
     )! as TextField;
-    let res = await axios.post("/api/v1/web/auth/instance", {
+    const res = await axios.post("/api/v1/web/auth/instance", {
       id: id.value,
       key: instance_key.value,
     });

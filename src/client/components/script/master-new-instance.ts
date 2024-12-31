@@ -3,13 +3,15 @@ import { ReqNewInstance } from "../../../server/api/types";
 import axios from "axios";
 import { html } from "../../lib/html";
 const initlistener = () => {
-  let name = document.getElementById(
+  const name = document.getElementById(
     "master-new-instance-name-field"
   )! as TextField;
-  let id = document.getElementById(
+  const id = document.getElementById(
     "master-new-instance-id-field"
   )! as TextField;
-  let button = document.getElementById("master-new-instance-button")! as Button;
+  const button = document.getElementById(
+    "master-new-instance-button"
+  )! as Button;
   button.addEventListener("click", () => {
     if (+name.reportValidity() + +id.reportValidity() == 2) {
       axios

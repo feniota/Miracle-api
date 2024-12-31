@@ -18,6 +18,13 @@ export const ReqNewInstance = Record({
 });
 export type ReqNewInstance = Static<typeof ReqNewInstance>;
 
+export const ReqRemoveInstance = Record({
+  token: String,
+  id: String,
+});
+
+export type ReqRemoveInstance = Static<typeof ReqRemoveInstance>;
+
 export const ResToken = Record({
   success: Boolean,
   token: String,

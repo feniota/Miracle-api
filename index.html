@@ -22,12 +22,12 @@
         id="appbar"
         ><div>
           <mdui-button-icon
-            icon="menu--two-tone"
+            icon="menu"
             id="navigation-drawer-button"
           ></mdui-button-icon>
           <mdui-button-icon
             class="hidden"
-            icon="arrow_back--two-tone"
+            icon="arrow_back"
             id="back-button"
           ></mdui-button-icon>
         </div>
@@ -42,9 +42,7 @@
         id="navigation-drawer"
       >
         <mdui-list id="navigation-drawer-list">
-          <mdui-list-item icon="lock--two-tone" rounded active
-            >需要认证</mdui-list-item
-          >
+          <mdui-list-item icon="lock" rounded active>需要认证</mdui-list-item>
         </mdui-list>
       </mdui-navigation-drawer>
 
@@ -59,7 +57,7 @@
     <mdui-dialog
       class="-md-dialog-manual-width"
       id="auth-dialog"
-      icon="lock_person--two-tone"
+      icon="lock_person"
     >
       <span slot="headline">需要身份验证</span>
       <span slot="description" id="auth-dialog-desc-norm"
@@ -72,13 +70,13 @@
         <mdui-text-field
           id="auth-input-instance-id"
           label="实例 ID"
-          icon="dns--two-tone"
+          icon="dns"
         ></mdui-text-field>
         <mdui-text-field
           toggle-password
           id="auth-input-instance-key"
           label="管理密钥"
-          icon="key--two-tone"
+          icon="key"
           type="password"
         ></mdui-text-field>
       </div>
@@ -87,7 +85,7 @@
           toggle-password
           id="auth-input-master-key"
           label="主密钥"
-          icon="admin_panel_settings--two-tone"
+          icon="admin_panel_settings"
           type="password"
         ></mdui-text-field>
       </div>

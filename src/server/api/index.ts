@@ -16,7 +16,7 @@ class MiracleApi {
     return this.app;
   }
   constructor(data: MiracleData) {
-    let router = Router();
+    const router = Router();
     this._data = data;
     this._auth = new MiracleAuth();
 
