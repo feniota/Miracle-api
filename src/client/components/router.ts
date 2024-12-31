@@ -36,7 +36,7 @@ const master_new_instance = Handlebars.compile(_master_new_instance);
 const master_remove_instance = Handlebars.compile(_master_remove_instance);
 
 const log = new Log("router");
-
+let invoke_count = 0;
 const drawlist_instance_operations = html`<mdui-list-item
     icon="image"
     id="list-item-wallpaper"
@@ -61,6 +61,7 @@ const drawlist_instance_operations = html`<mdui-list-item
   </mdui-list-item>`;
 
 const router = async (back?: boolean): Promise<void> => {
+  invoke_count++;
   const path = window.miracle.interaction.path;
   const main = document.getElementById("main")!;
   const drawerlist = document.getElementById("navigation-drawer-list")!;
@@ -193,8 +194,8 @@ const router = async (back?: boolean): Promise<void> => {
         await list_item_out(drawerlist, back);
         drawerlist.innerHTML = drawlist_instance_operations;
         list_item_in(drawerlist, back);
+        instance_op_navbar_listener();
       }
-      instance_op_navbar_listener();
       break;
     case "/instance/slogan/":
       title.innerHTML = window.miracle.interaction.current_name + " - 标语编辑";
@@ -203,19 +204,18 @@ const router = async (back?: boolean): Promise<void> => {
         await list_item_out(drawerlist, back);
         drawerlist.innerHTML = drawlist_instance_operations;
         list_item_in(drawerlist, back);
+        instance_op_navbar_listener();
       }
-      instance_op_navbar_listener();
       break;
     case "/instance/config/":
       title.innerHTML = window.miracle.interaction.current_name + " - 配置文件";
       main.innerHTML = instance_config({});
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
-        console.log("animate");
         await list_item_out(drawerlist, back);
         drawerlist.innerHTML = drawlist_instance_operations;
         list_item_in(drawerlist, back);
+        instance_op_navbar_listener();
       }
-      instance_op_navbar_listener();
       break;
     default:
       log.warn("Unrecognized path: " + path);

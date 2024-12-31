@@ -13,7 +13,6 @@ const tokens = (
   auth: () => MiracleAuth
 ) => {
   app.post("/web/auth/master", (req, res) => {
-    console.log(req.body);
     try {
       const body = ReqWebAuthMaster.check(req.body);
       if (data().check_master_key(body.key)) {

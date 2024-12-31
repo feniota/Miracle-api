@@ -141,7 +141,6 @@ btn.addEventListener("click", async () => {
     } else {
       errHandler("key-master");
     }
-    console.log(res.data);
   } else {
     const id = document.getElementById("auth-input-instance-id")! as TextField;
     const instance_key = document.getElementById(
@@ -172,7 +171,6 @@ btn.addEventListener("click", async () => {
     } else {
       errHandler("key-instance");
     }
-    console.log(res.data);
   }
 });
 
