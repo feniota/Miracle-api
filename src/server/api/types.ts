@@ -1,4 +1,4 @@
-import { Number, String, Record, Static, Boolean } from "runtypes";
+import { Number, String, Record, Static, Boolean, Array } from "runtypes";
 
 export const ReqWebAuthMaster = Record({
   key: String,
@@ -20,7 +20,7 @@ export type ReqNewInstance = Static<typeof ReqNewInstance>;
 
 export const ReqRemoveInstance = Record({
   token: String,
-  id: String,
+  instances: Array(String),
 });
 
 export type ReqRemoveInstance = Static<typeof ReqRemoveInstance>;

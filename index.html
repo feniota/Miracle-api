@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-Hans" class="mdui-theme-auto">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
@@ -16,22 +16,39 @@
         variant="medium"
         scroll-behavior="shrink elevate"
         id="appbar"
-        ><div>
-          <mdui-button-icon
-            icon="menu"
-            id="navigation-drawer-button"
-          ></mdui-button-icon>
-          <mdui-button-icon
-            class="hidden"
-            icon="arrow_back"
-            id="back-button"
-          ></mdui-button-icon>
-        </div>
+      >
+        <mdui-button-icon
+          icon="menu"
+          id="navigation-drawer-button"
+        ></mdui-button-icon>
+        <mdui-button-icon
+          class="hidden"
+          icon="arrow_back"
+          id="back-button"
+        ></mdui-button-icon>
         <mdui-top-app-bar-title id="top-title"
           >Feniota Miracle 控制台</mdui-top-app-bar-title
         >
+        <div class="flex-grow"></div>
+        <mdui-dropdown>
+          <mdui-button-icon icon="light_mode" slot="trigger"></mdui-button-icon>
+          <mdui-menu selects="single" id="dark-mode-select" value="auto">
+            <mdui-menu-item icon="light_mode" value="light"
+              >亮色模式</mdui-menu-item
+            >
+            <mdui-menu-item icon="dark_mode" value="dark"
+              >暗色模式</mdui-menu-item
+            >
+            <mdui-divider> </mdui-divider>
+            <mdui-menu-item
+              value="auto"
+              id="dark-mode-switch-auto"
+              selected-icon="check_circle"
+              >跟随系统</mdui-menu-item
+            >
+          </mdui-menu>
+        </mdui-dropdown>
       </mdui-top-app-bar>
-
       <mdui-navigation-drawer
         close-on-esc
         close-on-overlay-click

@@ -27,11 +27,6 @@
 .instance-wallpaper {
   padding-left: 10px;
 
-  /* 这是放两张卡片的容器 */
-  /* .-md-content {
-    padding-top: 15px
-  } */
-
   .card-default {
     min-width: 400px;
   }
@@ -77,8 +72,27 @@
 }
 
 .remove-instance {
+  :is(mdui-card) {
+    outline: 2px solid rgb(var(--mdui-color-surface-container-low));
+    outline-offset: -2px;
+    transition-property: all;
+    transition-duration: var(--mdui-motion-duration-short2);
+    transition-timing-function: var(--mdui-motion-easing-linear);
+  }
+
   :is(mdui-card).miracle-selected {
-    outline-width: 1px;
-    outline-color: rgb(var(--mdui-color-primary));
+    outline: 2px solid rgb(var(--mdui-color-secondary));
+    outline-offset: -2px;
+    background-color: rgb(var(--mdui-color-secondary-container));
+    color: rgb(var(--mdui-color-on-secondary-container));
+  }
+}
+
+:is(mdui-top-app-bar.master-remove-instance-selecting) {
+  background-color: rgb(var(--mdui-color-primary));
+
+  mdui-top-app-bar-title,
+  mdui-button-icon {
+    color: rgb(var(--mdui-color-on-primary));
   }
 }

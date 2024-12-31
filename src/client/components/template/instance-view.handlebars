@@ -1,8 +1,8 @@
 {{! data: { instances: [{name, id}], md:boolean } }}
 <div class="main miracle-instance-view {{#if md}}-md{{else}}-sm{{/if}}-content">
   {{#each instances}}
-  <mdui-card class="instance-card card-default view-transition" clickable miracle-instance-id="{{ id }}"
-    miracle-instance-name="{{ name }}" style="--vtid: instance-{{id}}">
+  <mdui-card class="instance-card card-default" clickable data-miracle-instance-id="{{ id }}"
+    data-miracle-instance-name="{{ name }}">
     <div class="content">
       <div class="content-row flex-center">
         <mdui-icon name="dns"></mdui-icon>

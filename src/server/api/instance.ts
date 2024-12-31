@@ -43,12 +43,20 @@ const instances = (
       const body = ReqRemoveInstance.check(req.body);
       const checktoken = auth().check_token(body.token);
       if (checktoken.valid && checktoken.type === "master") {
-        const success = data().remove_instance(body.id);
+        let success = true;
+        body.instances.forEach((id) => {
+          if (!data().remove_instance(id)) {
+            success = false;
+          }
+        });
         if (success) {
           data().write();
-          res.json({ success: true } as ResError);
+          res.json({ success: true, msg: "" } as ResError);
         } else {
-          res.json({ success: false, msg: "Instance not found" } as ResError);
+          res.json({
+            success: false,
+            msg: "Some of the instances not found",
+          } as ResError);
         }
       } else {
         res.json({ success: false, msg: "Invalid key" } as ResError);

@@ -88,6 +88,15 @@
   font-family: 'Monaco', 'Cascadia Mono', 'Courier New', Courier, monospace;
 }
 
+.divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
 :is(mdui-dialog)::part(panel) {
   transition-duration: 0.5s;
   transition-property: width, height;

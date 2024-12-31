@@ -1,10 +1,12 @@
+export type MiracleClientInstance = { id: string; name: string };
+
 export type MiracleGlobalVar = {
   interaction: {
     path_from: string;
     path: string;
     current: string;
     current_name: string;
-    instances: { name: string; id: string }[];
+    instances: MiracleClientInstance[];
   };
   api: {
     type: "instance" | "master";

@@ -114,6 +114,7 @@ const router = async (back?: boolean): Promise<void> => {
             window.miracle.interaction.instances = instances;
             main.innerHTML = instance_view({ instances, md });
             instance_view_listener(true);
+            return;
           } else {
             window.miracle.interaction.instances = [];
             main.innerHTML = html`<div class="main">
@@ -125,7 +126,7 @@ const router = async (back?: boolean): Promise<void> => {
           log.error(e);
           snackbar({ message: "获取实例列表失败" });
         });
-      instance_view_listener();
+      instance_view_listener(false);
       break;
     case "/master/":
       title.innerHTML = "服务器设置";
@@ -139,10 +140,27 @@ const router = async (back?: boolean): Promise<void> => {
       break;
     case "/master/remove-instance/":
       title.innerHTML = "删除实例";
-      main.innerHTML = master_remove_instance({
-        instances: window.miracle.interaction.instances,
-      });
-      master_remove_instance_listener();
+      main.innerHTML = html`<div class="main">
+        <mdui-circular-progress id="empty-placeholder"></mdui-circular-progress>
+      </div>`;
+      get_instances()
+        .then((instances) => {
+          if (instances.length != 0) {
+            const md = breakpoint().up("md");
+            window.miracle.interaction.instances = instances;
+            main.innerHTML = master_remove_instance({ instances, md });
+            master_remove_instance_listener();
+          } else {
+            window.miracle.interaction.instances = [];
+            main.innerHTML = html`<div class="main">
+              <div id="empty-placeholder">${"什么都木有 ＞﹏＜"}</div>
+            </div>`;
+          }
+        })
+        .catch((e) => {
+          log.error(e);
+          snackbar({ message: "获取实例列表失败" });
+        });
       break;
     case "/instance/":
       main.innerHTML = instance_panel({});
