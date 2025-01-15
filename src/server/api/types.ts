@@ -1,4 +1,5 @@
-import { Number, String, Record, Static, Boolean, Array } from "runtypes";
+// biome-ignore lint/suspicious/noShadowRestrictedNames: expectionally allowed for runtypes
+import { Number, String, Record, type Static, Boolean, Array } from "runtypes";
 
 export const ReqWebAuthMaster = Record({
   key: String,

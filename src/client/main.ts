@@ -3,8 +3,8 @@ import "mdui/mdui.css";
 import "mdui";
 import {
   breakpoint,
-  Menu,
-  NavigationDrawer,
+  type Menu,
+  type NavigationDrawer,
   observeResize,
   setTheme,
 } from "mdui";
@@ -13,10 +13,10 @@ import "./api/auth";
 import "./lib/globalvar";
 import { back } from "./components/router";
 import Log from "./lib/log";
-import { Theme } from "mdui/internal/theme";
+import type { Theme } from "mdui/internal/theme";
 
 const drawer = document.getElementById(
-  "navigation-drawer"
+  "navigation-drawer",
 )! as NavigationDrawer;
 
 const log = new Log("main");
@@ -47,7 +47,7 @@ const log = new Log("main");
       localStorage.setItem("dark-mode", darkmode.value);
       setTheme(darkmode.value);
     } else {
-      log.error("Invalid dark mode choice: " + darkmode.value);
+      log.error(`Invalid dark mode choice: ${darkmode.value}`);
     }
   });
   const storage_dark = localStorage.getItem("dark-mode");
@@ -59,7 +59,11 @@ const log = new Log("main");
 
 {
   const resize_functions = () => {
-    breakpoint().up("md") ? (drawer.open = true) : (drawer.open = false);
+    if (breakpoint().up("md")) {
+      drawer.open = true;
+    } else {
+      drawer.open = false;
+    }
     observeBreakpoint("dialog-manual-width");
     observeBreakpoint("content");
     observeBreakpoint("main");

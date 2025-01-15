@@ -1,11 +1,12 @@
-import { ListItem, snackbar } from "mdui";
+import { type ListItem, snackbar } from "mdui";
 import { route } from "../router";
 const initlistener = () => {
   const instance_list_item = document.getElementsByClassName(
-    "instance-list-item"
+    "instance-list-item",
   ) as HTMLCollectionOf<ListItem>;
   if (instance_list_item) {
-    Array.from(instance_list_item).forEach((element) => {
+    //Array.from(instance_list_item).forEach((element) => {
+    for (const element of Array.from(instance_list_item)) {
       if (
         element.getAttribute("miracle-instance-id") ===
         window.miracle.interaction.current
@@ -22,14 +23,14 @@ const initlistener = () => {
           return;
         }
         window.miracle.interaction.current = element.getAttribute(
-          "miracle-instance-id"
+          "miracle-instance-id",
         )!;
         window.miracle.interaction.current_name = element.getAttribute(
-          "miracle-instance-name"
+          "miracle-instance-name",
         )!;
         route("/instance/");
       });
-    });
+    }
   }
   document
     .getElementById("instance-panel-wallpaper")!

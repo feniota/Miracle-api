@@ -1,16 +1,16 @@
-import { Router } from "express";
-import { MiracleData } from "../misc/data-management";
+import type { Router } from "express";
+import type { MiracleData } from "../misc/data-management";
 import {
   ReqWebAuthInstance,
   ReqWebAuthMaster,
-  ResError,
-  ResToken,
+  type ResError,
+  type ResToken,
 } from "./types";
-import { MiracleAuth } from "../misc/auth";
+import type { MiracleAuth } from "../misc/auth";
 const tokens = (
   app: Router,
   data: () => MiracleData,
-  auth: () => MiracleAuth
+  auth: () => MiracleAuth,
 ) => {
   app.post("/web/auth/master", (req, res) => {
     try {

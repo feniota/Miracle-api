@@ -1,14 +1,14 @@
-import { Button, ButtonIcon, snackbar, TextField } from "mdui";
+import { type Button, type ButtonIcon, snackbar, type TextField } from "mdui";
 import { route } from "../router";
 import axios from "axios";
 const initlistener = () => {
   const add_instance_button = document.getElementById(
-    "master-settings-add-instance"
+    "master-settings-add-instance",
   )! as Button;
   const remove_instance_button = document.getElementById(
-    "master-settings-remove-instance"
+    "master-settings-remove-instance",
   )! as Button;
-  if (window.miracle.api.type == "instance") {
+  if (window.miracle.api.type === "instance") {
     add_instance_button.disabled = true;
     remove_instance_button.disabled = true;
   } else {
@@ -21,10 +21,10 @@ const initlistener = () => {
   }
 
   const weather_key_textfield = document.getElementById(
-    "master-settings-weather-key"
+    "master-settings-weather-key",
   )! as TextField;
   const weather_key_button = document.getElementById(
-    "master-settings-weather-key-submit"
+    "master-settings-weather-key-submit",
   )! as ButtonIcon;
   weather_key_button.addEventListener("click", () => {
     if (weather_key_textfield.value) {
@@ -42,7 +42,7 @@ const initlistener = () => {
             });
           } else {
             snackbar({
-              message: "设置失败：" + res.data.msg,
+              message: `设置失败：${res.data.msg}`,
             });
           }
         })
@@ -50,7 +50,7 @@ const initlistener = () => {
           weather_key_button.loading = false;
           console.error(e);
           snackbar({
-            message: "设置失败：" + e,
+            message: `设置失败：${e}`,
           });
         });
     }

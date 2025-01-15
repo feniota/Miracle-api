@@ -1,4 +1,5 @@
-import { Number, String, Record, Static, Union, Literal } from "runtypes";
+// biome-ignore lint/suspicious/noShadowRestrictedNames: expectionally allowed for runtypes
+import { Number, String, Record, type Static, Union, Literal } from "runtypes";
 import crypto from "node:crypto";
 
 const MiracleAuthTokenType = Record({
@@ -35,22 +36,20 @@ export class MiracleAuth {
   }
 
   check_token = (
-    token: string
+    token: string,
   ): { valid: boolean; type?: string; instance_id?: string } => {
     const token_obj = this.tokens.get(token);
     if (token_obj) {
       if (Date.now() >= token_obj.expires) {
         return { valid: false };
-      } else {
-        return {
-          valid: true,
-          type: token_obj.type,
-          instance_id: token_obj.instance_id,
-        };
       }
-    } else {
-      return { valid: false };
+      return {
+        valid: true,
+        type: token_obj.type,
+        instance_id: token_obj.instance_id,
+      };
     }
+    return { valid: false };
   };
 
   constructor() {

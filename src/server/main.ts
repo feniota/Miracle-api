@@ -8,7 +8,7 @@ import path from "node:path";
 (async () => {
   dotenv.config();
 
-  const port = parseInt(process.env.PORT || "5000");
+  const port = Number.parseInt(process.env.PORT || "5000");
   const config_file =
     process.env.CONFIG ||
     path.join(__dirname, "..", ".miracle-data", "config.json");
@@ -20,12 +20,11 @@ import path from "node:path";
     // 检测文件是否存在
     if (fs.existsSync(config_file)) {
       return await MiracleData.init_from_file(config_file);
-    } else {
-      const data = MiracleData.new_dataset(config_file);
-      data.make_master_key();
-      await data.write();
-      return data;
     }
+    const data = MiracleData.new_dataset(config_file);
+    data.make_master_key();
+    await data.write();
+    return data;
   })();
 
   const app = express();
@@ -37,6 +36,6 @@ import path from "node:path";
   app.get("/generate_204", (_, res) => res.sendStatus(204));
 
   ViteExpress.listen(app, port, () =>
-    console.log("Server is listening on http://localhost:" + port)
+    console.log(`Server is listening on http://localhost:${port}`),
   );
 })();

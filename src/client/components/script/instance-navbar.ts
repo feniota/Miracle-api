@@ -1,4 +1,4 @@
-import { ListItem } from "mdui";
+import type { ListItem } from "mdui";
 import { route } from "../router";
 
 const initlistener = () => {

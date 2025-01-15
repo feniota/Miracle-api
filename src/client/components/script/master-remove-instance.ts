@@ -1,5 +1,12 @@
-import { Button, ButtonIcon, Card, Dialog, Icon, snackbar } from "mdui";
-import { MiracleClientInstance } from "../../lib/globalvar";
+import {
+  type Button,
+  ButtonIcon,
+  type Card,
+  type Dialog,
+  type Icon,
+  snackbar,
+} from "mdui";
+import type { MiracleClientInstance } from "../../lib/globalvar";
 import axios from "axios";
 import { route } from "../router";
 import { ResError } from "../../../server/api/types";
@@ -12,23 +19,22 @@ const initlistener = () => {
   const dark_mode_dropdown =
     document.getElementById("dark-mode-select")!.parentElement!;
   const confirm_dialog = document.getElementById(
-    "remove-instance-dialog"
+    "remove-instance-dialog",
   )! as Dialog;
   const dialog_desc = document.getElementById("remove-instance-dialog-desc")!;
   const submit_button = new ButtonIcon();
   submit_button.icon = "delete_forever";
   submit_button.onclick = () => {
     const selected = JSON.parse(
-      storage.getAttribute("data-selected-items")!
+      storage.getAttribute("data-selected-items")!,
     ) as Array<MiracleClientInstance>;
     dialog_desc.innerText = `这将删除 ${
       selected.length
     } 个实例：${selected.reduce((acc, cur, _index) => {
       if (_index === 0) {
         return `${cur.name}`;
-      } else {
-        return `${acc}、${cur.name}`;
       }
+      return `${acc}、${cur.name}`;
     }, "")}`;
     confirm_dialog.open = true;
   };
@@ -40,13 +46,13 @@ const initlistener = () => {
   };
 
   const button_cancel = document.getElementById(
-    "remove-instance-dialog-cancel"
+    "remove-instance-dialog-cancel",
   )! as Button;
   button_cancel.addEventListener("click", () => {
     confirm_dialog.open = false;
   });
   const button_ok = document.getElementById(
-    "remove-instance-dialog-ok"
+    "remove-instance-dialog-ok",
   )! as Button;
   button_ok.addEventListener("click", () => {
     if (window.miracle.api.type !== "master") {
@@ -54,7 +60,7 @@ const initlistener = () => {
       return;
     }
     const selected = JSON.parse(
-      storage.getAttribute("data-selected-items")!
+      storage.getAttribute("data-selected-items")!,
     ) as Array<MiracleClientInstance>;
     confirm_dialog.closeOnEsc = false;
     confirm_dialog.closeOnOverlayClick = false;
@@ -74,7 +80,7 @@ const initlistener = () => {
           snackbar({ message: "删除成功" });
           route("/master/remove-instance/");
         } else {
-          snackbar({ message: "删除失败：" + data.msg });
+          snackbar({ message: `删除失败：${data.msg}` });
           confirm_dialog.closeOnEsc = true;
           confirm_dialog.closeOnOverlayClick = true;
         }
@@ -85,16 +91,17 @@ const initlistener = () => {
         confirm_dialog.closeOnOverlayClick = true;
         button_cancel.disabled = false;
         console.error(e);
-        snackbar({ message: "删除失败：" + e });
+        snackbar({ message: `删除失败：${e}` });
       });
   });
 
   if (instance_card) {
-    (Array.from(instance_card) as Card[]).forEach((element) => {
+    //(Array.from(instance_card) as Card[]).forEach((element) => {
+    for (const element of Array.from(instance_card) as Card[]) {
       element.addEventListener("click", () => {
         element.classList.toggle("miracle-selected");
         let selected = JSON.parse(
-          storage.getAttribute("data-selected-items")!
+          storage.getAttribute("data-selected-items")!,
         ) as Array<MiracleClientInstance>;
         if (element.classList.contains("miracle-selected")) {
           (element.querySelector("mdui-icon")! as Icon).name = "check_circle";
@@ -120,7 +127,7 @@ const initlistener = () => {
           undo(); //因为它要复用，上面的那个不要，所以单独放进一个函数
         }
       });
-    });
+    }
   }
 };
 

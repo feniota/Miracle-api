@@ -1,15 +1,16 @@
 import {
-  Number,
-  String,
+  // biome-ignore lint/suspicious/noShadowRestrictedNames:
+  Number, // biome-ignore lint/suspicious/noShadowRestrictedNames:
+  String, // biome-ignore lint/suspicious/noShadowRestrictedNames:
   Array,
   Record,
-  Static,
+  type Static,
   Literal,
   Union,
 } from "runtypes";
 import { writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
-import { createHash, randomBytes } from "node:crypto";
+import { type BinaryLike, createHash, randomBytes } from "node:crypto";
 
 export const MiracleInstanceDataType = Record({
   api_key: String,
@@ -51,7 +52,7 @@ export const MiracleDataType = Record({
 
 export type MiracleDataType = Static<typeof MiracleDataType>;
 
-function hash(obj: any): string {
+function hash(obj: BinaryLike): string {
   return createHash("sha256").update(obj).digest("hex");
 }
 
@@ -64,19 +65,18 @@ export class MiracleData {
     return writeFile(
       path.join(this.data_directory, this.config_filename),
       JSON.stringify(this._data),
-      "utf-8"
+      "utf-8",
     );
   };
 
   static async init_from_file(file_path: string) {
-    let dataraw, dataobj;
+    let dataraw: string;
+    let dataobj: MiracleDataType;
     try {
       dataraw = await readFile(file_path, "utf8");
     } catch (e) {
       console.error(
-        "Fatal error occured when reading data from file: \n" +
-          e +
-          "\nshutting down..."
+        `Fatal error occured when reading data from file: \n${e}\nshutting down...`,
       );
       process.exit(1);
     }
@@ -84,9 +84,7 @@ export class MiracleData {
       dataobj = JSON.parse(dataraw);
     } catch (e) {
       console.error(
-        "Fatal error occured when parsing data from file: \n" +
-          e +
-          "\nshutting down..."
+        `Fatal error occured when parsing data from file: \n${e}\nshutting down...`,
       );
       process.exit(1);
     }
@@ -95,22 +93,21 @@ export class MiracleData {
         dataobj = MiracleDataType.check(dataobj);
       } catch (e) {
         console.error(
-          "Fatal error occured when parsing data from file: \nUnmatched types.\nshutting down..."
+          "Fatal error occured when parsing data from file: \nUnmatched types.\nshutting down...",
         );
-        console.error("\ndetails: " + e);
+        console.error(`\ndetails: ${e}`);
         process.exit(1);
       }
       return new MiracleData(
         dataobj,
         path.dirname(file_path),
-        path.basename(file_path)
+        path.basename(file_path),
       );
-    } else {
-      console.error(
-        "Fatal error occured when parsing data from file: \nUnknown version.\nshutting down..."
-      );
-      process.exit(1);
     }
+    console.error(
+      "Fatal error occured when parsing data from file: \nUnknown version.\nshutting down...",
+    );
+    process.exit(1);
   }
 
   static new_dataset(file_path: string) {
@@ -130,7 +127,7 @@ export class MiracleData {
         },
       },
       path.dirname(file_path),
-      path.basename(file_path)
+      path.basename(file_path),
     );
   }
 
@@ -138,9 +135,7 @@ export class MiracleData {
     const rawkey = randomBytes(32).toString("base64url");
     this._data.common.master_key = hash(rawkey);
     console.log(
-      "New master key generated:\n\n" +
-        rawkey +
-        "\n\nWARNING: This only shows up once, so make sure to copy it somewhere safe!"
+      `New master key generated:\n\n${rawkey}\n\nWARNING: This only shows up once, so make sure to copy it somewhere safe!`,
     );
   };
 
@@ -150,33 +145,34 @@ export class MiracleData {
 
   check_instance_key = (instance_name: string, key: string): boolean => {
     let result = false;
-    this._data.common.instances.forEach((element) => {
+    //this._data.common.instances.forEach((element) => {
+    for (const element of this._data.common.instances) {
       if (element.name === instance_name) {
         result = element.api_key === hash(key);
       }
-    });
+    }
     return result;
   };
 
   remove_instance = (id: string): boolean => {
     const index = this._data.common.instances.findIndex(
-      (element) => element.id === id
+      (element) => element.id === id,
     );
     if (index === -1) {
       return false;
-    } else {
-      this._data.common.instances.splice(index, 1);
-      return true;
     }
+    this._data.common.instances.splice(index, 1);
+    return true;
   };
 
   new_instance = (name: string, id: string): string => {
     let exist = false;
-    this._data.common.instances.forEach((element) => {
+    //this._data.common.instances.forEach((element) => {
+    for (const element of this._data.common.instances) {
       if (element.id === id) {
         exist = true;
       }
-    });
+    }
     if (exist) {
       return "";
     }
@@ -214,7 +210,7 @@ export class MiracleData {
 
   get_instance_config = (instance_id: string) => {
     return this._data.common.instances.find(
-      (element) => element.id === instance_id
+      (element) => element.id === instance_id,
     )!.config;
   };
 

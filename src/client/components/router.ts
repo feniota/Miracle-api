@@ -66,9 +66,9 @@ const router = async (back?: boolean): Promise<void> => {
   const main = document.getElementById("main")!;
   const drawerlist = document.getElementById("navigation-drawer-list")!;
   const title = document.getElementById("top-title")!;
-  log.log("route, path: " + path);
+  log.log(`route, path: ${path}`);
 
-  if (path == "/") {
+  if (path === "/") {
     document.getElementById("back-button")!.classList.add("hidden");
   } else {
     document.getElementById("back-button")!.classList.remove("hidden");
@@ -110,18 +110,18 @@ const router = async (back?: boolean): Promise<void> => {
       </div>`;
       get_instances()
         .then((instances) => {
-          if (instances.length != 0) {
+          if (instances.length !== 0) {
             const md = breakpoint().up("md");
             window.miracle.interaction.instances = instances;
             main.innerHTML = instance_view({ instances, md });
             instance_view_listener(true);
             return;
-          } else {
-            window.miracle.interaction.instances = [];
-            main.innerHTML = html`<div class="main">
-              <div id="empty-placeholder">${"什么都木有 ＞﹏＜"}</div>
-            </div>`;
           }
+          window.miracle.interaction.instances = [];
+          main.innerHTML = html`<div class="main">
+            <div id="empty-placeholder">${"什么都木有 ＞﹏＜"}</div>
+          </div>`;
+          return;
         })
         .catch((e) => {
           log.error(e);
@@ -146,7 +146,7 @@ const router = async (back?: boolean): Promise<void> => {
       </div>`;
       get_instances()
         .then((instances) => {
-          if (instances.length != 0) {
+          if (instances.length !== 0) {
             const md = breakpoint().up("md");
             window.miracle.interaction.instances = instances;
             main.innerHTML = master_remove_instance({ instances, md });
@@ -188,7 +188,7 @@ const router = async (back?: boolean): Promise<void> => {
       instance_panel_listener();
       break;
     case "/instance/wallpaper/":
-      title.innerHTML = window.miracle.interaction.current_name + " - 壁纸编辑";
+      title.innerHTML = `${window.miracle.interaction.current_name} - 壁纸编辑`;
       main.innerHTML = instance_wallpaper({});
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
         await list_item_out(drawerlist, back);
@@ -198,7 +198,7 @@ const router = async (back?: boolean): Promise<void> => {
       }
       break;
     case "/instance/slogan/":
-      title.innerHTML = window.miracle.interaction.current_name + " - 标语编辑";
+      title.innerHTML = `${window.miracle.interaction.current_name} - 标语编辑`;
       main.innerHTML = instance_slogan({});
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
         await list_item_out(drawerlist, back);
@@ -208,7 +208,7 @@ const router = async (back?: boolean): Promise<void> => {
       }
       break;
     case "/instance/config/":
-      title.innerHTML = window.miracle.interaction.current_name + " - 配置文件";
+      title.innerHTML = `${window.miracle.interaction.current_name} - 配置文件`;
       main.innerHTML = instance_config({});
       if (!window.miracle.interaction.path_from.match(/^\/instance\/\w+\/$/)) {
         await list_item_out(drawerlist, back);
@@ -218,7 +218,7 @@ const router = async (back?: boolean): Promise<void> => {
       }
       break;
     default:
-      log.warn("Unrecognized path: " + path);
+      log.warn(`Unrecognized path: ${path}`);
   }
   main_fade_in(main, back).onfinish = () => {
     main.style.opacity = "1";
@@ -235,7 +235,8 @@ export const route = (path: string, back?: boolean) => {
 
 export const back = () => {
   const path = window.miracle.interaction.path;
-  if (path != "/") {
+  if (path !== "/") {
     return route(path.replace(/\/[^\/]*\/$/, "/"), true);
-  } else return Promise.resolve();
+  }
+  return Promise.resolve();
 };

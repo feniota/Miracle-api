@@ -5,8 +5,8 @@ export function main_fade_out(element: HTMLElement, back?: boolean) {
   ];
   const styles = getComputedStyle(element);
   return element.animate(keyframes, {
-    duration: parseInt(
-      styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2)
+    duration: Number.parseInt(
+      styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2),
     ),
     easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
   });
@@ -19,8 +19,8 @@ export function main_fade_in(element: HTMLElement, back?: boolean) {
   ];
   const styles = getComputedStyle(element);
   return element.animate(keyframes, {
-    duration: parseInt(
-      styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
+    duration: Number.parseInt(
+      styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2),
     ),
     easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
   });
@@ -37,13 +37,13 @@ export function list_item_in(parent: HTMLElement, back?: boolean) {
     ];
     const styles = getComputedStyle(parent);
     const total = 30 * (parent.children.length - 1);
-    let result: any;
+    let result: Animation | undefined;
     Array.from(parent.children).forEach((element, index) => {
       const delay = back ? index * 30 : total - index * 30;
       const anim = element.animate(keyframes, {
         delay,
-        duration: parseInt(
-          styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2)
+        duration: Number.parseInt(
+          styles.getPropertyValue("--mdui-motion-duration-short4").slice(0, -2),
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
         fill: "forwards",
@@ -71,13 +71,13 @@ export function list_item_out(parent: HTMLElement, back?: boolean) {
     ];
     const styles = getComputedStyle(parent);
     const total = 30 * (parent.children.length - 1);
-    let result: any;
+    let result: Animation | undefined;
     Array.from(parent.children).forEach((element, index) => {
       const delay = back ? index * 30 : total - index * 30;
       const anim = element.animate(keyframes, {
         delay,
-        duration: parseInt(
-          styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2)
+        duration: Number.parseInt(
+          styles.getPropertyValue("--mdui-motion-duration-short3").slice(0, -2),
         ),
         easing: styles.getPropertyValue("--mdui-motion-easing-standard"),
         fill: "forwards",
@@ -94,4 +94,5 @@ export function list_item_out(parent: HTMLElement, back?: boolean) {
   });
 }
 
+// @ts-ignore: TODO
 export async function change_title(element: HTMLElement, title: string) {}

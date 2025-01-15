@@ -1,18 +1,18 @@
-import { Router } from "express";
-import { MiracleAuth } from "../misc/auth";
-import { MiracleData } from "../misc/data-management";
+import type { Router } from "express";
+import type { MiracleAuth } from "../misc/auth";
+import type { MiracleData } from "../misc/data-management";
 import {
   ReqNewInstance,
   ReqRemoveInstance,
   ReqSetWeatherKey,
-  ResError,
-  ResNewInstance,
+  type ResError,
+  type ResNewInstance,
 } from "./types";
 
 const master = (
   app: Router,
   data: () => MiracleData,
-  auth: () => MiracleAuth
+  auth: () => MiracleAuth,
 ) => {
   app.post("/web/instances/new", (req, res) => {
     try {
@@ -44,11 +44,12 @@ const master = (
       const checktoken = auth().check_token(body.token);
       if (checktoken.valid && checktoken.type === "master") {
         let success = true;
-        body.instances.forEach((id) => {
+        //body.instances.forEach((id) => {
+        for (const id of body.instances) {
           if (!data().remove_instance(id)) {
             success = false;
           }
-        });
+        }
         if (success) {
           data().write();
           res.json({ success: true, msg: "" } as ResError);

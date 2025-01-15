@@ -1,19 +1,19 @@
-import { TextField, Button, snackbar, dialog } from "mdui";
-import { ReqNewInstance } from "../../../server/api/types";
+import { type TextField, type Button, snackbar, dialog } from "mdui";
+import type { ReqNewInstance } from "../../../server/api/types";
 import axios from "axios";
 import { html } from "../../lib/html";
 const initlistener = () => {
   const name = document.getElementById(
-    "master-new-instance-name-field"
+    "master-new-instance-name-field",
   )! as TextField;
   const id = document.getElementById(
-    "master-new-instance-id-field"
+    "master-new-instance-id-field",
   )! as TextField;
   const button = document.getElementById(
-    "master-new-instance-button"
+    "master-new-instance-button",
   )! as Button;
   button.addEventListener("click", () => {
-    if (+name.reportValidity() + +id.reportValidity() == 2) {
+    if (+name.reportValidity() + +id.reportValidity() === 2) {
       axios
         .post("/api/v1/web/instances/new", {
           name: name.value,
@@ -58,7 +58,7 @@ const initlistener = () => {
                   .then(() => snackbar({ message: "已复制到剪贴板" }));
               });
           } else {
-            snackbar({ message: "创建失败：" + res.data.msg });
+            snackbar({ message: `创建失败：${res.data.msg}` });
           }
         });
     }

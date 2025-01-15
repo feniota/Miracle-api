@@ -24,7 +24,7 @@
   min-height: 100dvh;
 }
 
-:is(.content, .content-no-flex, .-sm-content)>* {
+:is(.content, .content-no-flex, .-sm-content) > * {
   margin-bottom: 10px;
 }
 
@@ -34,7 +34,7 @@
   flex-direction: column;
 }
 
-:is(.content-row, .-md-content)>* {
+:is(.content-row, .-md-content) > * {
   margin-right: 10px;
   margin-bottom: 10px;
 }
@@ -85,7 +85,7 @@
 }
 
 .text-field-monospace::part(input) {
-  font-family: 'Monaco', 'Cascadia Mono', 'Courier New', Courier, monospace;
+  font-family: "Monaco", "Cascadia Mono", "Courier New", Courier, monospace;
 }
 
 .divider {

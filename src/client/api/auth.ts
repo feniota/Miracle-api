@@ -1,4 +1,10 @@
-import { Button, Checkbox, Dialog, snackbar, TextField } from "mdui";
+import {
+  type Button,
+  type Checkbox,
+  type Dialog,
+  snackbar,
+  type TextField,
+} from "mdui";
 import axios from "axios";
 import _log from "../lib/log";
 import { route } from "../components/router";
@@ -11,7 +17,7 @@ const errHandler = (
     | "key-master"
     | "connect"
     | "unknownmethod"
-    | "wrongtype"
+    | "wrongtype",
 ) => {
   const errtext = () => {
     switch (error) {
@@ -38,7 +44,7 @@ const successHandler = (
   type: "instance" | "master",
   token: string,
   expires: number,
-  instance?: string
+  instance?: string,
 ): void => {
   if (!(typeof token === "string" && typeof expires === "number")) {
     errHandler("wrongtype");
@@ -67,12 +73,12 @@ const unsetbtnloading = () => {
   if (!auth_method) {
     dialog.open = true;
   } else {
-    let e: any = null;
+    let e: Error | null = null;
     if (auth_method === "master") {
       axios
         .post(
           "/api/v1/web/auth/master",
-          JSON.parse(localStorage.getItem("auth-body")!)
+          JSON.parse(localStorage.getItem("auth-body")!),
         )
         .then((res) => {
           if (!res.data.success) {
@@ -81,12 +87,14 @@ const unsetbtnloading = () => {
             successHandler("master", res.data.token, res.data.expires);
           }
         })
-        .catch((_e) => (e = _e));
+        .catch((_e) => {
+          e = _e;
+        });
     } else if (auth_method === "instance") {
       axios
         .post(
           "/api/v1/web/auth/instance",
-          JSON.parse(localStorage.getItem("auth-body")!)
+          JSON.parse(localStorage.getItem("auth-body")!),
         )
         .then((res) => {
           if (!res.data.success) {
@@ -96,11 +104,13 @@ const unsetbtnloading = () => {
               "instance",
               res.data.token,
               res.data.expires,
-              res.data.instance_id
+              res.data.instance_id,
             );
           }
         })
-        .catch((_e) => (e = _e));
+        .catch((_e) => {
+          e = _e;
+        });
     } else {
       log.error("Unknown auth method");
       errHandler("unknownmethod");
@@ -114,14 +124,14 @@ const unsetbtnloading = () => {
 btn.addEventListener("click", async () => {
   setbtnloading();
   const mastercb = document.getElementById(
-    "auth-dialog-master-checkbox"
+    "auth-dialog-master-checkbox",
   )! as Checkbox;
   const savecb = document.getElementById(
-    "auth-dialog-save-checkbox"
+    "auth-dialog-save-checkbox",
   )! as Checkbox;
   if (mastercb.checked) {
     const master_key = document.getElementById(
-      "auth-input-master-key"
+      "auth-input-master-key",
     )! as TextField;
     const res = await axios.post("/api/v1/web/auth/master", {
       key: master_key.value,
@@ -133,7 +143,7 @@ btn.addEventListener("click", async () => {
         "auth-body",
         JSON.stringify({
           key: master_key.value,
-        })
+        }),
       );
     }
     if (res.data.success) {
@@ -144,7 +154,7 @@ btn.addEventListener("click", async () => {
   } else {
     const id = document.getElementById("auth-input-instance-id")! as TextField;
     const instance_key = document.getElementById(
-      "auth-input-instance-key"
+      "auth-input-instance-key",
     )! as TextField;
     const res = await axios.post("/api/v1/web/auth/instance", {
       id: id.value,
@@ -158,7 +168,7 @@ btn.addEventListener("click", async () => {
         JSON.stringify({
           id: id.value,
           key: instance_key.value,
-        })
+        }),
       );
     }
     if (res.data.success) {
@@ -166,7 +176,7 @@ btn.addEventListener("click", async () => {
         "instance",
         res.data.token,
         res.data.expires,
-        res.data.instance_id
+        res.data.instance_id,
       );
     } else {
       errHandler("key-instance");
@@ -177,14 +187,13 @@ btn.addEventListener("click", async () => {
 export const check_token_expire = (): boolean => {
   if (Date.now() < window.miracle.api.expires) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 {
   const mastercheckbox = document.getElementById(
-    "auth-dialog-master-checkbox"
+    "auth-dialog-master-checkbox",
   )! as Checkbox;
   const masterfield = document.getElementById("auth-dialog-fields-master")!;
   const instancefield = document.getElementById("auth-dialog-fields-instance")!;

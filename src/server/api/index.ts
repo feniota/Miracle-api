@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { MiracleData } from "../misc/data-management";
+import type { MiracleData } from "../misc/data-management";
 import { MiracleAuth } from "../misc/auth";
 import web_tokens from "./web-tokens";
 import instances from "./instance";

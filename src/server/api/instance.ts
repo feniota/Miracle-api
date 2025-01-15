@@ -1,13 +1,13 @@
-import { Router } from "express";
-import { MiracleAuth } from "../misc/auth";
-import { MiracleData } from "../misc/data-management";
-import { ReqWebAuthInstance, ResError, ResInstance } from "./types";
+import type { Router } from "express";
+import type { MiracleAuth } from "../misc/auth";
+import type { MiracleData } from "../misc/data-management";
+import { ReqWebAuthInstance, type ResError, type ResInstance } from "./types";
 
 const instances = (
   app: Router,
   data: () => MiracleData,
   // @ts-ignore
-  auth: () => MiracleAuth
+  auth: () => MiracleAuth,
 ) => {
   app.get("/web/instances/get", (_req, res) => {
     const instances = data()
@@ -39,7 +39,7 @@ const instances = (
     try {
       const body = ReqWebAuthInstance.check(req.body);
       if (data().check_instance_key(body.id, body.key)) {
-        let config = data().get_instance_config(body.id);
+        const config = data().get_instance_config(body.id);
         config;
         res.json({ success: true, config });
       } else {
